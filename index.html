@@ -1,0 +1,711 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tiệm Bánh Mộng Mơ</title>
+<style>
+:root{
+ --ink:#4b302a;--muted:#7b625a;--paper:#fffaf0;--pink:#ef86a5;
+ --cream:#ffe9c8;--green:#9fd5bd;--danger:#df5e6e;--gold:#f0bd54;
+ --shadow:0 12px 35px rgba(70,45,35,.14)
+}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+ background:radial-gradient(circle at 15% 5%,#fff 0 12%,transparent 35%),linear-gradient(135deg,#ffe6ee,#fff4d8 48%,#e6f7ee);min-height:100vh}
+button,input{font:inherit} button{cursor:pointer}
+#app{max-width:1240px;margin:auto;padding:14px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 16px;background:#fffdf7e8;border:2px solid #fff;border-radius:24px;box-shadow:var(--shadow);position:sticky;top:10px;z-index:10;backdrop-filter:blur(8px)}
+.logo{font-size:clamp(20px,3vw,31px);font-weight:950;letter-spacing:-1px}.logo span{color:#e45f83}
+.stats{display:flex;flex-wrap:wrap;gap:7px;justify-content:flex-end}.stat{background:#fff2d3;padding:7px 10px;border-radius:13px;font-weight:850;font-size:13px}
+main{display:grid;grid-template-columns:1.45fr .75fr;gap:16px;margin-top:16px}
+.panel{background:#fffdf8ef;border:2px solid #fff;border-radius:26px;box-shadow:var(--shadow);padding:16px}
+.cabinet-wrap{background:linear-gradient(180deg,#fff8ef,#f8eadb);border-radius:20px;padding:9px;margin-bottom:14px;border:1px solid #ead9c7}
+.cabinet-wrap img{width:100%;height:165px;object-fit:contain;display:block;filter:drop-shadow(0 8px 9px rgba(70,40,30,.12))}
+.shopline{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:7px}.shopname{font-size:21px;font-weight:950}.open{font-size:13px;background:#e7f7ef;border-radius:99px;padding:5px 9px;font-weight:850}
+.orderhead{display:flex;justify-content:space-between;align-items:center;gap:10px}.customer-profile{display:flex;align-items:center;gap:8px;min-height:48px}.customer-profile img{width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid #eadfd7;background:#fff}.customer-placeholder{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#fff0d8;border:2px solid #eadfd7;font-size:25px}.customer-name{font-weight:950;font-size:17px}.customer-tag{display:inline-block;margin-top:2px;padding:2px 7px;border-radius:99px;font-size:10px;font-weight:950;background:#ffe7ec;color:#a43c58}.customer-tag.vip{background:#fff0c9;color:#8b6412}.patience-circle{--patience:100%;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;flex:0 0 36px;background:conic-gradient(#67b894 var(--patience),#eadfd7 0);position:relative;box-shadow:0 2px 8px rgba(70,45,35,.12)}.patience-circle::after{content:"";position:absolute;inset:4px;border-radius:50%;background:#fffdf7}.patience-circle span{position:relative;z-index:1;font-size:15px}.customer-next{gap:8px}.customer-next .customer-name{color:#4b302a}.clock{display:none}.customer{font-weight:950;font-size:19px}.clock{font-weight:950;background:#fff0f4;border-radius:12px;padding:7px 10px;display:none}
+.bubble{margin:9px 0;background:#fff0f4;padding:12px 14px;border-radius:17px;font-weight:750}
+.timer{height:10px;background:#e7ddd4;border-radius:99px;overflow:hidden}.timer i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#9bd5bd,#f2c15e,#eb718c)}
+.order{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}.mini{background:#fff;border:2px solid #eadfd7;border-radius:13px;padding:7px 9px;font-size:13px;font-weight:850}.mini.ok{border-color:#83cbb0;background:#eefaf4}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.cake{position:relative;border:2px solid #eadfd7;background:#fff;border-radius:18px;padding:7px;min-height:170px;display:flex;flex-direction:column;justify-content:center;align-items:center;transition:.16s;box-shadow:0 5px 14px #0000000d}.cake:hover{transform:translateY(-4px);border-color:#ef91ad}.cake:active{transform:scale(.97)}.cake img{width:100%;height:108px;object-fit:contain}.cake b{font-size:13px}.price{font-size:11px;color:var(--muted);margin-top:2px}.stock{position:absolute;right:6px;top:6px;background:#4b302a;color:#fff;border-radius:99px;padding:3px 6px;font-size:10px;font-weight:900}
+.controls{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.controls button,.shop-btn{border:0;border-radius:13px;padding:10px 12px;font-weight:900}.restock{background:#4b302a;color:white}.skinshop{background:#f5d58b}.tablebox{margin-top:12px;background:#fff7ea;border-radius:17px;padding:11px}
+table{width:100%;border-collapse:collapse;font-size:12px}th,td{text-align:left;padding:6px;border-bottom:1px dashed #ead8c9}th{font-size:11px;color:#7c6259}.profit{font-weight:900;color:#438467}
+.side.reputation-mini{padding:0;background:transparent;border:0;box-shadow:none;min-height:44px}.reputation-toggle{width:44px;height:44px;border:0;border-radius:50%;background:#fffdf8;color:var(--ink);box-shadow:0 7px 18px rgba(70,45,35,.18);font-size:27px;font-weight:900;line-height:44px;padding:0;transition:.18s}.reputation-toggle:active{transform:scale(.94)}.reputation-content{display:none;background:#fffdf8ef;border:2px solid #fff;border-radius:26px;box-shadow:var(--shadow);padding:16px}.reputation-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.reputation-head h2{margin:0}.reputation-close{width:32px;height:32px;border:0;border-radius:50%;background:#f4fbf8;color:var(--ink);font-size:22px;font-weight:900;line-height:32px;padding:0;transform:rotate(45deg)}.side.reputation-expanded{padding:0;background:transparent;border:0;box-shadow:none}.side.reputation-expanded .reputation-toggle{display:none}.side.reputation-expanded .reputation-content{display:block}.side.reputation-expanded .accordion{margin-top:10px}.side h2{margin:0 0 9px}.accordion{background:#f4fbf8;border-radius:17px;margin-top:10px;overflow:hidden;border:1px solid transparent}.accordion-head{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;border:0;background:transparent;color:var(--ink);padding:13px 12px;font-weight:950;font-size:15px;text-align:left}.accordion-head:active{background:#edf7f2}.accordion-head .plus{font-size:23px;line-height:1;min-width:24px;text-align:center;transition:transform .18s}.accordion.open{border-color:#d8e8df}.accordion.open .accordion-head{background:#eef8f3}.accordion.open .plus{transform:rotate(45deg)}.accordion-body{display:none;padding:0 12px 13px;line-height:1.55}.accordion.open .accordion-body{display:block}.accordion-body small{display:block;margin-top:4px}.accordion-body #analyticsBox{background:transparent;padding:0}.rating{display:flex;align-items:center;justify-content:space-between;background:#fff0f4;padding:12px;border-radius:17px}.stars{font-size:25px;letter-spacing:1px}.rating b{font-size:24px}.meter{height:8px;background:#eadfd7;border-radius:99px;overflow:hidden;margin-top:8px}.meter i{display:block;height:100%;background:#efb24f;width:100%}.box{background:#f4fbf8;border-radius:17px;padding:11px;margin-top:10px}.box b{display:block;margin-bottom:6px}.skinlist{display:grid;grid-template-columns:1fr 1fr;gap:8px}.skin{background:#fff;border:2px solid #eadfd7;border-radius:15px;padding:5px;text-align:left;position:relative}.skin img{width:100%;height:68px;object-fit:contain}.skin strong{font-size:12px}.skin small{display:block;color:#78625b}.remove-shelf{position:absolute;left:7px;top:7px;width:28px;height:28px;border:0;border-radius:50%;background:#e95d6a;color:#fff;font-size:18px;font-weight:900;line-height:28px;padding:0;cursor:pointer}.remove-shelf.expired-remove{background:#c92f3d;box-shadow:0 0 0 3px #ffd7dc;transform:scale(1.08)}.expired-cake{border:2px solid #e95d6a;border-radius:14px;padding:4px}.expired-cake .muted{color:#c92f3d;font-weight:900}
+.cake{position:relative}.skin button{border:0;border-radius:10px;padding:5px 7px;font-size:11px;font-weight:900;margin-top:5px;background:#4b302a;color:white}.skin.equipped{border-color:#83cbb0;background:#effaf5}.skin.locked button{background:#f0c26c;color:#5a3b1c}.log{max-height:145px;overflow:auto;font-size:12px}.queue{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.queue span{background:#fff0d8;border:1px solid #f0d4a4;border-radius:10px;padding:5px 8px;font-size:12px;font-weight:800}.reviews{max-height:190px;overflow:auto}.reviews div{font-size:12px;padding:8px 0;border-bottom:1px dashed #e7d8cf}.modal .secondary{background:#f4d58d;color:#573d22;margin:5px}.modal input{width:90px;padding:8px;border:1px solid #dfc9b7;border-radius:9px}.log div{padding:6px 0;border-bottom:1px dashed #e7d8cf}
+.overlay{position:fixed;inset:0;background:#3f2825b8;display:none;align-items:center;justify-content:center;padding:18px;z-index:50}.modal{max-width:520px;width:100%;background:#fffdf7;border-radius:28px;padding:25px;text-align:center;box-shadow:0 25px 90px #0005}.modal h1{margin:4px 0;font-size:34px}.modal p{line-height:1.6}.modal button{border:0;border-radius:13px;padding:11px 15px;font-weight:900;background:#e56f91;color:#fff}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,25px);opacity:0;pointer-events:none;background:#4b302a;color:#fff;border-radius:99px;padding:10px 16px;font-weight:900;transition:.22s;z-index:60}.toast.show{opacity:1;transform:translate(-50%,0)}
+.start{position:fixed;inset:0;background:linear-gradient(135deg,#ffe8ef,#fff4d6);display:flex;align-items:center;justify-content:center;padding:20px;z-index:100}.startbox{max-width:520px;width:100%;background:#fffdf7;border-radius:30px;padding:30px;box-shadow:var(--shadow);text-align:center}.startbox h1{margin:0 0 8px;font-size:36px}.startbox p{line-height:1.55;color:#705c55}.startbox input{width:100%;padding:13px 15px;border:2px solid #eadcd2;border-radius:14px;outline:0;margin:10px 0}.startbox button{width:100%;border:0;border-radius:14px;padding:13px;background:#e56f91;color:white;font-weight:950;font-size:16px}
+.setup-note{background:#fff5df;border:1px solid #efd6aa;border-radius:15px;padding:10px;text-align:left;font-size:13px}.setup-row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff;border:2px solid #eadfd7;border-radius:15px;padding:10px;text-align:left}.setup-row img{width:72px;height:72px;object-fit:contain}.setup-row input{width:90px!important;margin:0!important;text-align:center}
+@media(max-width:850px){#app{padding:8px}main{grid-template-columns:1fr;gap:10px}.side{order:-1}header{position:static;border-radius:18px;padding:10px;align-items:flex-start}.logo{font-size:20px}.stats{gap:4px}.stat{padding:6px 7px;font-size:11px}.panel{border-radius:20px;padding:11px}.cabinet-wrap img{height:125px}.shopline{align-items:flex-start}.shopname{font-size:17px}.controls{display:grid;grid-template-columns:1fr 1fr}.controls button{width:100%;min-height:44px}.cake{min-height:145px;touch-action:manipulation}.cake img{height:82px}.orderhead{align-items:flex-start}.customer{font-size:16px}.bubble{font-size:13px}.side h2{font-size:19px}.reviews{max-height:150px}.skinlist{grid-template-columns:repeat(3,1fr)}.skin img{height:60px}.modal{max-height:92vh;overflow:auto;padding:18px;border-radius:22px}}
+@media(max-width:520px){.grid{grid-template-columns:repeat(2,1fr)}.skinlist{grid-template-columns:repeat(2,1fr)}.stats{justify-content:flex-start}.stats .stat:nth-child(3){display:none}.tablebox{overflow-x:auto}.tablebox table{min-width:430px}.expiry-row,.restock-row{align-items:flex-start;flex-direction:column}.expiry-row>span:last-child{width:100%;display:flex}.expiry-row button{flex:1}.restock-row label{width:100%;display:flex;justify-content:space-between;align-items:center}.modal h1{font-size:26px}}
+.expiry-list,.restock-list{display:grid;gap:8px;text-align:left;margin:12px 0}.expiry-row,.restock-row{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#fff5e8;border:1px solid #ead8c9;border-radius:12px;padding:9px;font-size:13px}.expiry-row button{padding:7px 9px;margin:2px;font-size:12px}.restock-row input{width:64px;padding:7px;border:1px solid #dfc9b7;border-radius:8px}.muted{color:#7b625a;font-size:12px}
+@media(max-width:500px){.grid{grid-template-columns:1fr 1fr}.cake{min-height:150px}.cake img{height:90px}.skinlist{grid-template-columns:1fr 1fr}.stats .stat{font-size:11px}}
+
+.cake-locked{filter:saturate(.45);opacity:.72;background:#f7f3ee}.cake-locked:hover{transform:none;border-color:#eadfd7}.locked-row{background:#f3eee9!important;opacity:.82}.locked-input{font-weight:900;color:#8a6f64;background:#eadfd7;border-radius:10px;padding:8px 11px}.unlock-roadmap{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0;text-align:left}.unlock-roadmap span{background:#f4eee7;border:1px solid #e3d5c8;border-radius:99px;padding:5px 8px;font-size:11px;color:#806a61}.unlock-roadmap span.unlocked{background:#edf8f2;border-color:#b9ddcb;color:#3f725a}.audio-btn{background:#e8f2ee!important;color:#315d4b!important}.durability{font-weight:900;color:#4d705d}.repair-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}.wire{border:3px solid #eadfd7;background:#fff;border-radius:15px;padding:13px 8px;font-weight:950;min-height:62px;transition:.15s}.wire.selected{transform:scale(.96);box-shadow:0 0 0 4px #f0c26c}.wire.done{opacity:.35;pointer-events:none}.repair-timer{font-size:22px;font-weight:950;background:#fff0f4;border-radius:13px;padding:8px}.bill-box{background:#fff5df;border:1px solid #efd6aa;border-radius:15px;padding:10px;margin-top:10px}.bill-box strong{font-size:18px}@media(max-width:520px){.repair-grid{grid-template-columns:repeat(2,1fr)}.wire{min-height:56px;padding:10px 6px}}
+.overlay{align-items:flex-start;overflow-y:auto;overscroll-behavior:contain}.modal{margin:12px auto;max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain}.modal::-webkit-scrollbar{width:8px}.modal::-webkit-scrollbar-thumb{background:#d9c7ba;border-radius:99px}
+</style>
+</head>
+<style>
+:root{
+ --ink:#4b302a;--muted:#7b625a;--paper:#fffaf0;--pink:#ef86a5;
+ --cream:#ffe9c8;--green:#9fd5bd;--danger:#df5e6e;--gold:#f0bd54;
+ --shadow:0 12px 35px rgba(70,45,35,.14)
+}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+ background:radial-gradient(circle at 15% 5%,#fff 0 12%,transparent 35%),linear-gradient(135deg,#ffe6ee,#fff4d8 48%,#e6f7ee);min-height:100vh}
+button,input{font:inherit} button{cursor:pointer}
+#app{max-width:1240px;margin:auto;padding:14px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 16px;background:#fffdf7e8;border:2px solid #fff;border-radius:24px;box-shadow:var(--shadow);position:sticky;top:10px;z-index:10;backdrop-filter:blur(8px)}
+.logo{font-size:clamp(20px,3vw,31px);font-weight:950;letter-spacing:-1px}.logo span{color:#e45f83}
+.stats{display:flex;flex-wrap:wrap;gap:7px;justify-content:flex-end}.stat{background:#fff2d3;padding:7px 10px;border-radius:13px;font-weight:850;font-size:13px}
+main{display:grid;grid-template-columns:1.45fr .75fr;gap:16px;margin-top:16px}
+.panel{background:#fffdf8ef;border:2px solid #fff;border-radius:26px;box-shadow:var(--shadow);padding:16px}
+.cabinet-wrap{background:linear-gradient(180deg,#fff8ef,#f8eadb);border-radius:20px;padding:9px;margin-bottom:14px;border:1px solid #ead9c7}
+.cabinet-wrap img{width:100%;height:165px;object-fit:contain;display:block;filter:drop-shadow(0 8px 9px rgba(70,40,30,.12))}
+.shopline{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:7px}.shopname{font-size:21px;font-weight:950}.open{font-size:13px;background:#e7f7ef;border-radius:99px;padding:5px 9px;font-weight:850}
+.orderhead{display:flex;justify-content:space-between;align-items:center;gap:10px}.customer{font-weight:950;font-size:19px}.clock{font-weight:950;background:#fff0f4;border-radius:12px;padding:7px 10px;display:none}
+.bubble{margin:9px 0;background:#fff0f4;padding:12px 14px;border-radius:17px;font-weight:750}
+.timer{height:10px;background:#e7ddd4;border-radius:99px;overflow:hidden}.timer i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#9bd5bd,#f2c15e,#eb718c)}
+.order{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}.mini{background:#fff;border:2px solid #eadfd7;border-radius:13px;padding:7px 9px;font-size:13px;font-weight:850}.mini.ok{border-color:#83cbb0;background:#eefaf4}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.cake{position:relative;border:2px solid #eadfd7;background:#fff;border-radius:18px;padding:7px;min-height:170px;display:flex;flex-direction:column;justify-content:center;align-items:center;transition:.16s;box-shadow:0 5px 14px #0000000d}.cake:hover{transform:translateY(-4px);border-color:#ef91ad}.cake:active{transform:scale(.97)}.cake img{width:100%;height:108px;object-fit:contain}.cake b{font-size:13px}.price{font-size:11px;color:var(--muted);margin-top:2px}.stock{position:absolute;right:6px;top:6px;background:#4b302a;color:#fff;border-radius:99px;padding:3px 6px;font-size:10px;font-weight:900}
+.controls{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.controls button,.shop-btn{border:0;border-radius:13px;padding:10px 12px;font-weight:900}.restock{background:#4b302a;color:white}.skinshop{background:#f5d58b}.tablebox{margin-top:12px;background:#fff7ea;border-radius:17px;padding:11px}
+table{width:100%;border-collapse:collapse;font-size:12px}th,td{text-align:left;padding:6px;border-bottom:1px dashed #ead8c9}th{font-size:11px;color:#7c6259}.profit{font-weight:900;color:#438467}
+.side.reputation-mini{padding:0;background:transparent;border:0;box-shadow:none;min-height:44px}.reputation-toggle{width:44px;height:44px;border:0;border-radius:50%;background:#fffdf8;color:var(--ink);box-shadow:0 7px 18px rgba(70,45,35,.18);font-size:27px;font-weight:900;line-height:44px;padding:0;transition:.18s}.reputation-toggle:active{transform:scale(.94)}.reputation-content{display:none;background:#fffdf8ef;border:2px solid #fff;border-radius:26px;box-shadow:var(--shadow);padding:16px}.reputation-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.reputation-head h2{margin:0}.reputation-close{width:32px;height:32px;border:0;border-radius:50%;background:#f4fbf8;color:var(--ink);font-size:22px;font-weight:900;line-height:32px;padding:0;transform:rotate(45deg)}.side.reputation-expanded{padding:0;background:transparent;border:0;box-shadow:none}.side.reputation-expanded .reputation-toggle{display:none}.side.reputation-expanded .reputation-content{display:block}.side.reputation-expanded .accordion{margin-top:10px}.side h2{margin:0 0 9px}.rating{display:flex;align-items:center;justify-content:space-between;background:#fff0f4;padding:12px;border-radius:17px}.stars{font-size:25px;letter-spacing:1px}.rating b{font-size:24px}.meter{height:8px;background:#eadfd7;border-radius:99px;overflow:hidden;margin-top:8px}.meter i{display:block;height:100%;background:#efb24f;width:100%}.box{background:#f4fbf8;border-radius:17px;padding:11px;margin-top:10px}.box b{display:block;margin-bottom:6px}.skinlist{display:grid;grid-template-columns:1fr 1fr;gap:8px}.skin{background:#fff;border:2px solid #eadfd7;border-radius:15px;padding:5px;text-align:left;position:relative}.skin img{width:100%;height:68px;object-fit:contain}.skin strong{font-size:12px}.skin small{display:block;color:#78625b}.remove-shelf{position:absolute;left:7px;top:7px;width:28px;height:28px;border:0;border-radius:50%;background:#e95d6a;color:#fff;font-size:18px;font-weight:900;line-height:28px;padding:0;cursor:pointer}.remove-shelf.expired-remove{background:#c92f3d;box-shadow:0 0 0 3px #ffd7dc;transform:scale(1.08)}.expired-cake{border:2px solid #e95d6a;border-radius:14px;padding:4px}.expired-cake .muted{color:#c92f3d;font-weight:900}
+.cake{position:relative}.skin button{border:0;border-radius:10px;padding:5px 7px;font-size:11px;font-weight:900;margin-top:5px;background:#4b302a;color:white}.skin.equipped{border-color:#83cbb0;background:#effaf5}.skin.locked button{background:#f0c26c;color:#5a3b1c}.log{max-height:145px;overflow:auto;font-size:12px}.queue{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.queue span{background:#fff0d8;border:1px solid #f0d4a4;border-radius:10px;padding:5px 8px;font-size:12px;font-weight:800}.reviews{max-height:190px;overflow:auto}.reviews div{font-size:12px;padding:8px 0;border-bottom:1px dashed #e7d8cf}.modal .secondary{background:#f4d58d;color:#573d22;margin:5px}.modal input{width:90px;padding:8px;border:1px solid #dfc9b7;border-radius:9px}.log div{padding:6px 0;border-bottom:1px dashed #e7d8cf}
+.overlay{position:fixed;inset:0;background:#3f2825b8;display:none;align-items:center;justify-content:center;padding:18px;z-index:50}.modal{max-width:520px;width:100%;background:#fffdf7;border-radius:28px;padding:25px;text-align:center;box-shadow:0 25px 90px #0005}.modal h1{margin:4px 0;font-size:34px}.modal p{line-height:1.6}.modal button{border:0;border-radius:13px;padding:11px 15px;font-weight:900;background:#e56f91;color:#fff}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,25px);opacity:0;pointer-events:none;background:#4b302a;color:#fff;border-radius:99px;padding:10px 16px;font-weight:900;transition:.22s;z-index:60}.toast.show{opacity:1;transform:translate(-50%,0)}
+.start{position:fixed;inset:0;background:linear-gradient(135deg,#ffe8ef,#fff4d6);display:flex;align-items:center;justify-content:center;padding:20px;z-index:100}.startbox{max-width:520px;width:100%;background:#fffdf7;border-radius:30px;padding:30px;box-shadow:var(--shadow);text-align:center}.startbox h1{margin:0 0 8px;font-size:36px}.startbox p{line-height:1.55;color:#705c55}.startbox input{width:100%;padding:13px 15px;border:2px solid #eadcd2;border-radius:14px;outline:0;margin:10px 0}.startbox button{width:100%;border:0;border-radius:14px;padding:13px;background:#e56f91;color:white;font-weight:950;font-size:16px}
+.setup-note{background:#fff5df;border:1px solid #efd6aa;border-radius:15px;padding:10px;text-align:left;font-size:13px}.setup-row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff;border:2px solid #eadfd7;border-radius:15px;padding:10px;text-align:left}.setup-row img{width:72px;height:72px;object-fit:contain}.setup-row input{width:90px!important;margin:0!important;text-align:center}
+@media(max-width:850px){#app{padding:8px}main{grid-template-columns:1fr;gap:10px}.side{order:-1}header{position:static;border-radius:18px;padding:10px;align-items:flex-start}.logo{font-size:20px}.stats{gap:4px}.stat{padding:6px 7px;font-size:11px}.panel{border-radius:20px;padding:11px}.cabinet-wrap img{height:125px}.shopline{align-items:flex-start}.shopname{font-size:17px}.controls{display:grid;grid-template-columns:1fr 1fr}.controls button{width:100%;min-height:44px}.cake{min-height:145px;touch-action:manipulation}.cake img{height:82px}.orderhead{align-items:flex-start}.customer{font-size:16px}.bubble{font-size:13px}.side h2{font-size:19px}.reviews{max-height:150px}.skinlist{grid-template-columns:repeat(3,1fr)}.skin img{height:60px}.modal{max-height:92vh;overflow:auto;padding:18px;border-radius:22px}}
+@media(max-width:520px){.grid{grid-template-columns:repeat(2,1fr)}.skinlist{grid-template-columns:repeat(2,1fr)}.stats{justify-content:flex-start}.stats .stat:nth-child(3){display:none}.tablebox{overflow-x:auto}.tablebox table{min-width:430px}.expiry-row,.restock-row{align-items:flex-start;flex-direction:column}.expiry-row>span:last-child{width:100%;display:flex}.expiry-row button{flex:1}.restock-row label{width:100%;display:flex;justify-content:space-between;align-items:center}.modal h1{font-size:26px}}
+.expiry-list,.restock-list{display:grid;gap:8px;text-align:left;margin:12px 0}.expiry-row,.restock-row{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#fff5e8;border:1px solid #ead8c9;border-radius:12px;padding:9px;font-size:13px}.expiry-row button{padding:7px 9px;margin:2px;font-size:12px}.restock-row input{width:64px;padding:7px;border:1px solid #dfc9b7;border-radius:8px}.muted{color:#7b625a;font-size:12px}
+@media(max-width:500px){.grid{grid-template-columns:1fr 1fr}.cake{min-height:150px}.cake img{height:90px}.skinlist{grid-template-columns:1fr 1fr}.stats .stat{font-size:11px}}
+
+.cake-locked{filter:saturate(.45);opacity:.72;background:#f7f3ee}.cake-locked:hover{transform:none;border-color:#eadfd7}.locked-row{background:#f3eee9!important;opacity:.82}.locked-input{font-weight:900;color:#8a6f64;background:#eadfd7;border-radius:10px;padding:8px 11px}.unlock-roadmap{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0;text-align:left}.unlock-roadmap span{background:#f4eee7;border:1px solid #e3d5c8;border-radius:99px;padding:5px 8px;font-size:11px;color:#806a61}.unlock-roadmap span.unlocked{background:#edf8f2;border-color:#b9ddcb;color:#3f725a}.audio-btn{background:#e8f2ee!important;color:#315d4b!important}.durability{font-weight:900;color:#4d705d}.repair-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}.wire{border:3px solid #eadfd7;background:#fff;border-radius:15px;padding:13px 8px;font-weight:950;min-height:62px;transition:.15s}.wire.selected{transform:scale(.96);box-shadow:0 0 0 4px #f0c26c}.wire.done{opacity:.35;pointer-events:none}.repair-timer{font-size:22px;font-weight:950;background:#fff0f4;border-radius:13px;padding:8px}.bill-box{background:#fff5df;border:1px solid #efd6aa;border-radius:15px;padding:10px;margin-top:10px}.bill-box strong{font-size:18px}@media(max-width:520px){.repair-grid{grid-template-columns:repeat(2,1fr)}.wire{min-height:56px;padding:10px 6px}}
+.overlay{align-items:flex-start;overflow-y:auto;overscroll-behavior:contain}.modal{margin:12px auto;max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain}.modal::-webkit-scrollbar{width:8px}.modal::-webkit-scrollbar-thumb{background:#d9c7ba;border-radius:99px}
+
+/* Tabbed layout + themes */
+body[data-theme="cream"]{--ink:#4b302a;--muted:#7b625a;--paper:#fffaf0;--pink:#ef86a5;--cream:#ffe9c8;--green:#9fd5bd;--danger:#df5e6e;--gold:#f0bd54;background:radial-gradient(circle at 15% 5%,#fff 0 12%,transparent 35%),linear-gradient(135deg,#ffe6ee,#fff4d8 48%,#e6f7ee)}
+body[data-theme="brown"]{--ink:#3d2418;--muted:#765847;--paper:#f4e4cf;background:linear-gradient(135deg,#ead4bc,#caa47c 55%,#a97852);}
+body[data-theme="white"]{--ink:#263238;--muted:#66747b;background:#f5f7f8}
+body[data-theme="black"]{--ink:#f3eee9;--muted:#b9ada5;background:#151313;color:var(--ink)}
+body[data-theme="blue"]{--ink:#19324b;--muted:#58708a;background:linear-gradient(135deg,#e4f2ff,#cde4ff)}
+body[data-theme="green"]{--ink:#244535;--muted:#5f786b;background:linear-gradient(135deg,#e5f7ea,#cdebd6)}
+body[data-theme="pink"]{--ink:#54283b;--muted:#80576a;background:linear-gradient(135deg,#ffe7f0,#fbd0df)}
+body[data-theme="black"] .panel,body[data-theme="black"] header,body[data-theme="black"] .modal,body[data-theme="black"] .startbox{background:#211d1c;color:#f3eee9;border-color:#3b3430}
+body[data-theme="black"] .box,body[data-theme="black"] .tablebox,body[data-theme="black"] .cake,body[data-theme="black"] .skin,body[data-theme="black"] .tab-panel,body[data-theme="black"] .restock-row,body[data-theme="black"] .setup-row{background:#2a2523;color:#f3eee9;border-color:#4b403a}
+body[data-theme="black"] .muted,body[data-theme="black"] small{color:#c4b7ae}
+header{flex-wrap:wrap}.settings-btn{border:0;border-radius:13px;padding:9px 12px;font-weight:950;background:#e9dfd4;color:#4b302a}.top-actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.tab-btn{border:2px solid #eadfd7;background:#fff;border-radius:13px;padding:10px 13px;font-weight:950;color:var(--ink)}.tab-btn.active{background:#4b302a;color:#fff;border-color:#4b302a}.tab-panel{display:none}.tab-panel.active{display:block}.shelf-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}.shelf-head h2{margin:0}.shelf-capacity{font-size:12px;color:#78625b;background:#f4fbf8;border:1px solid #d8e8df;border-radius:999px;padding:6px 9px;white-space:nowrap}.empty-shelf{text-align:center;padding:35px 15px;background:#fff8ef;border:2px dashed #e4d5c8;border-radius:18px}.cabinet-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.decor-card,.coming-card{background:#fff7ed;border:2px dashed #e3d2c2;border-radius:18px;padding:20px;text-align:center}.theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.theme-btn{border:2px solid #eadfd7;border-radius:12px;padding:10px;background:#fff;font-weight:900}.theme-btn.active{outline:3px solid #ef86a5}.setting-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.setting-actions button{border:0;border-radius:12px;padding:10px;font-weight:900}.apology-actions{display:none;margin:9px 0}.apology-actions button{border:0;border-radius:13px;padding:11px 15px;background:#6cae8d;color:#fff;font-weight:950}.stats .stat{white-space:nowrap}.tab-panel .tablebox{margin-top:0}.skinlist{grid-template-columns:repeat(3,1fr)}
+@media(max-width:700px){.accordion-head{min-height:48px}.cabinet-grid{grid-template-columns:1fr}.skinlist{grid-template-columns:repeat(2,1fr)}.theme-grid{grid-template-columns:repeat(2,1fr)}.tab-btn{flex:1;min-width:130px}.top-actions{width:100%}.settings-btn{flex:1}}
+</style>
+<style>
+
+.ad-summary{background:#fff4df;border:1px solid #efd5a8;border-radius:15px;padding:10px 12px;margin-bottom:10px;text-align:center}.ad-card{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid #eadfd7;border-radius:15px;padding:11px;margin-top:8px}.ad-card small{color:#78625b;line-height:1.45}.ad-card button{white-space:nowrap;border:0;border-radius:10px;padding:9px 11px;font-weight:900;background:#4b302a;color:#fff}.ad-card button.secondary{background:#eadfd4;color:#4b302a}
+.reputation-tab-toggle{flex:0 0 44px!important;min-width:44px!important;width:44px!important;padding:8px!important;font-size:24px!important;line-height:1}
+.reputation-inline{display:none;margin:0 0 12px}
+.reputation-inline.reputation-expanded{display:block}
+.reputation-inline .reputation-content{display:block;background:#fffdf8ef;border:2px solid #fff;border-radius:26px;box-shadow:var(--shadow);padding:16px}
+.reputation-inline .reputation-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.reputation-inline .reputation-head h2{margin:0}
+.reputation-inline .accordion{margin-top:10px}
+@media(max-width:700px){.reputation-tab-toggle{flex:0 0 48px!important;min-width:48px!important;width:48px!important}}
+</style>
+
+<body data-theme="brown">
+<button id="hamburgerBtn" class="hamburger-btn" onclick="toggleMenu()" aria-label="Mở menu">☰</button>
+<div class="start" id="start">
+ <div class="startbox">
+  <div style="font-size:62px">🍰</div>
+  <h1>Tiệm Bánh Mộng Mơ</h1>
+  <p>Đặt tên tiệm của ngài. Một thương hiệu tử tế bắt đầu bằng cái tên, sau đó là bảng giá và một chút hoảng loạn khi khách xếp hàng.</p>
+  <input id="shopInput" maxlength="24" placeholder="Ví dụ: Tiệm Bánh Nhà Mình">
+  <button onclick="startGame()">🚪 Mở cửa tiệm</button>
+  <button class="secondary" style="margin-top:8px;background:#f4d58d;color:#573d22" onclick="continueGame()">💾 Tiếp tục bản lưu</button>
+ </div>
+</div>
+
+<div class="overlay" id="setup">
+ <div class="modal">
+  <div style="font-size:54px">📦</div>
+  <h1>Nhập lô bánh đầu tiên</h1>
+  <p>Tiệm của bạn bắt đầu với <b>300 xu</b>. Trước khi mở cửa, hãy nhập hàng. Loại bánh khởi đầu duy nhất là <b>Bánh su kem</b>.</p>
+  <div class="setup-note">💡 Ngày 1 chỉ có Bánh su kem. Các loại bánh mới sẽ được mở khóa theo ngày cố định; phải chơi tới đúng ngày mới được nhập và bán.</div>
+  <div class="setup-row" style="margin-top:12px">
+   <div style="display:flex;align-items:center;gap:9px"><img src="assets/su-kem.png" alt="Bánh su kem"><div><b>Bánh su kem</b><br><small>8 xu/chiếc · bán 18 xu</small></div></div>
+   <label><b>Số lượng</b><input id="starterQty" type="number" min="1" max="30" value="10"></label>
+  </div>
+  <p id="starterCost" style="font-weight:900;margin:12px 0">Chi phí: 80 xu · Còn lại: 220 xu</p>
+  <button onclick="confirmStarterStock()">📦 Nhập hàng & mở tiệm</button>
+ </div>
+</div>
+
+<div id="app">
+<header>
+ <div class="logo">🍰 <span id="shopTitle">Tiệm Bánh</span></div>
+ <div class="stats">
+  <div class="stat">💰 <span id="money">300</span> xu</div>
+  <div class="stat">⭐ Lv.<span id="level">1</span>/112</div>
+  <div class="stat">🔥 Combo <span id="combo">0</span></div>
+  <div class="stat">🕐 <span id="gameClock">08:30</span></div>
+ </div>
+ <div class="top-actions"><button class="settings-btn" onclick="openSettings()">⚙️ Cài đặt</button><button class="audio-btn" id="musicBtn" onclick="toggleMusic()">🎵 Nhạc: Bật</button><button class="settings-btn" id="nextDayBtn" onclick="nextDay()" disabled>🌅 Sang ngày mới</button></div>
+</header>
+
+<main>
+<section class="panel">
+ <div class="cabinet-wrap">
+  <div class="shopline"><div class="shopname" id="cabinetName">Tủ bánh • Basic</div><div class="open">🧲 +<span id="attract">0</span>% · 🛡️ <span id="durability">15</span>% bền</div></div>
+  <img id="cabinet" src="assets/cabinet_skins/classic.png" alt="Tủ bánh">
+ </div>
+ <div class="tabs" id="mainTabs" role="tablist">
+  <button class="tab-btn active" data-tab="shelf" onclick="switchTab('shelf');closeMenu()">🍰 Bánh trên kệ</button>
+  <button class="tab-btn" data-tab="restock" onclick="switchTab('restock');closeMenu()">📦 Nhập hàng</button>
+  <button class="tab-btn" data-tab="cabinet" onclick="switchTab('cabinet');closeMenu()">✨ Tủ / Trang trí</button>
+  <button class="tab-btn" data-tab="ads" onclick="switchTab('ads');closeMenu()">📣 Quảng cáo</button>
+  <button class="tab-btn" type="button" onclick="toggleReputationPanel();closeMenu()">📊 Tổng</button>
+ </div>
+
+ <div class="reputation-inline" id="reputationSide">
+  <div class="reputation-content" id="reputationContent">
+   <div class="reputation-head"><h2>📊 Tổng</h2><button class="reputation-close" type="button" onclick="toggleReputationPanel()" aria-label="Thu gọn">＋</button></div>
+   <div class="accordion">
+    <button class="accordion-head" type="button" onclick="toggleAccordion(this)"><span>🕗 Một ngày làm việc</span><span class="plus">＋</span></button>
+    <div class="accordion-body"><div>08:30 → 22:00 · Ngày <span id="dayNumber">1</span></div><small>Khách đến ngẫu nhiên. Lấy sai bánh làm khách mất 5 giây kiên nhẫn. Khi hết bánh giữa đơn, hãy bấm Xin lỗi khách trong 5 giây để không bị trừ sao.</small></div>
+   </div>
+   <div class="accordion">
+    <button class="accordion-head" type="button" onclick="toggleAccordion(this)"><span>📈 Doanh thu & Best Seller</span><span class="plus">＋</span></button>
+    <div class="accordion-body"><div id="analyticsBox"><b>📈 Doanh thu & Best Seller</b><div class="muted">Chưa có dữ liệu bán hàng.</div></div></div>
+   </div>
+   <div class="accordion">
+    <button class="accordion-head" type="button" onclick="toggleAccordion(this)"><span>⭐ Danh tiếng & đánh giá</span><span class="plus">＋</span></button>
+    <div class="accordion-body">
+     <div class="rating"><div><div class="stars" id="starsPage">★★★★</div><small>Đánh giá chung của khách hàng</small></div><b><span id="ratingPage">3.50</span> ⭐</b></div>
+     <div class="meter"><i id="ratingBarPage"></i></div>
+     <p class="muted" style="margin-top:10px">Bạn có thể trả lời từng bình luận để tạo thiện cảm với khách.</p>
+     <div class="reviews" id="reviewsPage"></div>
+     <div class="box" id="capitalStatusBox"><b>💰 Tình hình vốn</b><div class="muted">Khi tiệm không còn đủ vốn để tiếp tục, hệ thống vay tiền sẽ được mở trong tương lai.</div><button class="secondary loan-coming" disabled style="margin-top:8px;opacity:.65;cursor:not-allowed">💳 Vay tiền — Coming soon</button></div>
+    </div>
+   </div>
+   <div class="accordion">
+    <button class="accordion-head" type="button" onclick="toggleAccordion(this)"><span>👥 Loại khách</span><span class="plus">＋</span></button>
+    <div class="accordion-body"><div class="muted">🙂 Dễ tính 60% · 😤 Khó tính 38% · 👑 VIP 2%</div><div class="muted" style="margin-top:5px">Khách VIP mua nhiều hơn và có thưởng thêm xu.</div><div class="muted" style="margin-top:5px">👑 VIP: Kiều Lương Tâm · Sông Lớn · Mít Xi · Tung Tung Sahur · Phú Thợ Điện</div></div>
+   </div>
+   <div class="accordion">
+    <button class="accordion-head" type="button" onclick="toggleAccordion(this)"><span>📒 Nhật ký tiệm</span><span class="plus">＋</span></button>
+    <div class="accordion-body"><div class="log" id="log"></div></div>
+   </div>
+  </div>
+ </div>
+
+ <div id="tab-shelf" class="tab-panel active">
+  <div class="orderhead"><div class="customer" id="customer"><div class="customer-profile customer-next"><div class="customer-placeholder">👤</div><div class="customer-name">Khách đang tới...</div></div></div></div>
+  <div class="queue" id="queue"><span>🧍 Hàng chờ: 0 khách</span></div>
+  <div class="bubble" id="bubble">Chuẩn bị bánh cho khách đầu tiên.</div>
+  <div class="apology-actions" id="apologyActions"><button onclick="apologizeCustomer()">🙏 Xin lỗi khách hàng</button></div>
+  <div class="order" id="order"></div>
+  <div class="shelf-head"><h2>🍰 Bánh trên kệ</h2><span class="shelf-capacity">Kệ <b><span id="shelfSlots">0/2</span></b> · tối đa 9 slot</span></div>
+  <div class="top-shelf-tools"><div class="decor-slots" id="decorSlots"></div><button id="checkoutBag" class="checkout-bag" onclick="checkoutOrder()" disabled>🛍️ Túi</button></div>
+  <div class="grid" id="cakes"></div>
+  <div class="fruit-tray" id="fruitTray"></div>
+  <div class="controls"><button class="shop-btn" style="background:#f5d58b" onclick="closeShop()">🌙 Đóng cửa / Sang ngày</button></div>
+ </div>
+
+ <div id="tab-restock" class="tab-panel"><div id="restockChoices"></div><div class="box" style="margin-top:12px"><b>⏳ Bánh sắp hết hạn</b><div id="expiryManagementRestock"></div></div></div>
+ <div id="tab-cabinet" class="tab-panel">
+  <div class="box"><b>🪟 Tủ bánh</b><p class="muted">Độ bền càng cao thì tỉ lệ mất điện càng thấp. Mỗi 30 giây trong giờ mở cửa game sẽ kiểm tra sự cố.</p><div class="skinlist" id="skinList"></div></div>
+  <div class="box" style="margin-top:10px"><b>🌿 Trang trí quầy • tối đa 3 ô</b><p class="muted">Mua vật trang trí rồi bấm <b>Dùng</b>. Vật đang dùng sẽ hiện trên 3 ô màu kem ở quầy.</p><div class="decor-shop" id="decorShop"></div></div>
+ </div>
+ <div id="tab-ads" class="tab-panel"><div class="box"><h2 style="margin-top:0">📣 Quảng cáo</h2><p class="muted">Chọn chiến dịch để tăng tỉ lệ thu hút khách. Bạn có thể hủy bất cứ lúc nào; chi phí đã trả sẽ không được hoàn lại.</p><div id="adsBox"></div></div></div>
+</section>
+
+</main>
+</div>
+
+<div class="overlay" id="end"><div class="modal"><div style="font-size:58px" id="endIcon">🌙</div><h1 id="endTitle">Hết ngày!</h1><p id="summary"></p><div id="dayActions" style="margin-top:12px"><button onclick="closeDaySummary()">OK</button></div><div id="eventActions" style="margin-top:12px;display:none"></div><div id="loseActions" style="display:none;margin-top:12px"><button onclick="restartGame()">🔄 Mở tiệm lại</button><button class="secondary" onclick="location.reload()">🏠 Đặt lại từ đầu</button></div></div></div>
+<div class="overlay" id="repairOverlay"><div class="modal"><div style="font-size:54px">⚡</div><h1>⚡ Tủ bị mất điện!</h1><p id="repairText">Tủ đang mất điện. Hãy nối 6 dây theo đúng màu trước khi hết thời gian để bảo vệ bánh.</p><div class="repair-timer">⏱️ <span id="repairTimer">15</span>s</div><div class="repair-grid" id="repairGrid"></div><p class="muted">Cách chơi: chọn 2 đầu dây cùng màu để nối. Có 3 cặp cần hoàn thành.</p></div></div>
+
+<div class="overlay" id="settingsOverlay"><div class="modal"><div style="font-size:50px">⚙️</div><h1>Cài đặt</h1><div class="box" style="text-align:left"><b>💾 Lưu game</b><p class="muted">Lưu tiến trình hiện tại vào trình duyệt. Bạn có thể chọn “Tiếp tục bản lưu” ở màn hình đầu.</p><div class="setting-actions"><button style="background:#4b302a;color:#fff" onclick="saveGame()">💾 Save game</button><button style="background:#f0d6a0" onclick="clearSave()">🗑️ Xóa bản lưu</button></div></div><div class="box" style="text-align:left"><b>🎨 Màu nền</b><div class="theme-grid"><button class="theme-btn" data-theme-choice="white" onclick="setTheme('white')">🤍 Trắng</button><button class="theme-btn" data-theme-choice="black" onclick="setTheme('black')">🖤 Đen</button><button class="theme-btn" data-theme-choice="blue" onclick="setTheme('blue')">💙 Xanh dương</button><button class="theme-btn" data-theme-choice="green" onclick="setTheme('green')">💚 Xanh lá</button><button class="theme-btn" data-theme-choice="pink" onclick="setTheme('pink')">🩷 Hồng</button><button class="theme-btn" data-theme-choice="cream" onclick="setTheme('cream')">🍦 Kem</button><button class="theme-btn" data-theme-choice="brown" onclick="setTheme('brown')">🤎 Nâu</button></div></div><div class="box" style="text-align:left"><b>✏️ Đặt lại tên tiệm</b><input id="renameInput" maxlength="24" style="width:100%;margin-top:8px;padding:10px;border:1px solid #dfc9b7;border-radius:10px"><button style="margin-top:8px" onclick="renameShop()">Lưu tên mới</button></div><button class="secondary" onclick="closeSettings()">Đóng</button></div></div>
+<div class="toast" id="toast"></div>
+<script src="game.js"></script>
+<script>
+function continueGame(){if(!loadGame()){toast('Chưa có bản lưu để tiếp tục.');return}ensureAudio();startMusic();$('start').style.display='none';$('shopTitle').textContent=shopName;updateStarterCost();if(Object.values(stock).some(v=>v>0)){openShop()}else{$('setup').style.display='flex';}}
+</script>
+
+
+<style>
+/* Bố cục mới: menu hamburger, 3 ô trang trí, khay Vị và túi thanh toán */
+.hamburger-btn{position:fixed;left:10px;top:10px;z-index:80;width:42px;height:42px;border:0;border-radius:12px;background:#fffdf8;color:#4b302a;box-shadow:0 6px 18px rgba(70,45,35,.18);font-size:23px;font-weight:950;line-height:42px;padding:0}
+.tabs{position:fixed;left:10px;top:60px;z-index:79;display:none;flex-direction:column;gap:6px;width:min(250px,calc(100vw - 20px));padding:9px;background:#fffdf8f5;border:2px solid #fff;border-radius:16px;box-shadow:0 15px 40px rgba(70,45,35,.22);backdrop-filter:blur(10px)}
+.tabs.menu-open{display:flex!important}.tabs .tab-btn{width:100%;text-align:left}.top-shelf-tools{display:grid;grid-template-columns:1fr 92px;gap:8px;align-items:stretch;margin:8px 0 10px}.decor-slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.decor-slot{height:72px;border:2px solid #ead8c4;background:#fff3df;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}.decor-slot.empty{background:#fff3df}.decor-slot img{width:90%;height:90%;object-fit:contain;mix-blend-mode:normal;background:transparent}.decor-slot .slot-no{position:absolute;right:4px;top:3px;font-size:10px;font-weight:900;color:#6b513f;background:#fff8e8dd;border-radius:99px;padding:1px 4px}.fruit-tray{display:grid;grid-template-columns:repeat(8,1fr);gap:7px;margin-top:10px;background:#d4d4d4;border:2px solid #bcbcbc;border-radius:8px;padding:8px}.fruit-btn{min-height:66px;border:2px solid #222;background:#9bd9ec;border-radius:5px;padding:4px;position:relative;font-weight:900}.fruit-btn:disabled{opacity:.5;filter:grayscale(.4)}.fruit-btn.selected{outline:3px solid #ef8aa6;background:#bfefff}.fruit-btn .fruit-emoji{font-size:28px;display:block}.fruit-btn small{display:block;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fruit-btn .fruit-stock{position:absolute;right:3px;top:2px;background:#4b302a;color:#fff;border-radius:99px;padding:1px 4px;font-size:9px}.checkout-bag{width:100%;border:2px solid #e2cf38;border-radius:10px;background:#ffe91b;color:#4b302a;padding:11px;font-weight:950;box-shadow:0 4px 10px rgba(130,110,0,.12)}.checkout-bag:disabled{opacity:.48;filter:grayscale(.15);cursor:not-allowed}.order .mini.fruit-mini{border-color:#9bd9ec;background:#effbff}.decor-shop{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.decor-item{background:#fff;border:2px solid #eadfd7;border-radius:15px;padding:8px;text-align:center}.decor-item img{width:100%;height:90px;object-fit:contain}.decor-item b{font-size:12px}.decor-item small{display:block;color:#78625b}.decor-item button{border:0;border-radius:10px;padding:7px 9px;margin-top:6px;background:#4b302a;color:#fff;font-weight:900}.decor-item.equipped{border-color:#83cbb0;background:#effaf5}.customer-profile img{width:58px;height:58px;border-radius:12px;object-fit:contain;border:0;background:transparent}.customer-profile{align-items:center}.customer-profile>div:nth-child(2){min-width:0}.customer-tag{font-size:9px}.ad-card{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff7ed;border:1px solid #ead8c9;border-radius:13px;padding:10px;margin-top:8px}.ad-card button{border:0;border-radius:10px;padding:7px 9px;background:#4b302a;color:#fff;font-weight:900;white-space:nowrap}.ad-card button.secondary{background:#f0d6a0;color:#573d22}.restock-section-title{margin:14px 0 6px}.fruit-restock-row{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#eaf8fb;border:1px solid #b8dfe8;border-radius:12px;padding:9px;font-size:13px}.fruit-restock-row input{width:64px;padding:7px;border:1px solid #b8dfe8;border-radius:8px}.expiry-fruit{background:#edf9fb;border-color:#b9dfe7}
+@media(max-width:700px){.fruit-tray{grid-template-columns:repeat(4,1fr)}.top-shelf-tools{grid-template-columns:1fr 78px}.decor-slots{grid-template-columns:repeat(3,1fr)}.decor-shop{grid-template-columns:repeat(2,1fr)}}
+</style>
+<script>
+/* ===== V5 gameplay patch requested by player ===== */
+const FRUITS=[
+ {id:'grape',name:'Nho',emoji:'🍇',cost:5,price:13,profit:8},
+ {id:'passion',name:'Chanh dây',emoji:'🍋',cost:7,price:17,profit:10},
+ {id:'green-apple',name:'Táo xanh',emoji:'🍏',cost:6,price:15,profit:9},
+ {id:'orange',name:'Cam',emoji:'🍊',cost:5,price:14,profit:9},
+ {id:'peach',name:'Đào',emoji:'🍑',cost:7,price:18,profit:11},
+ {id:'strawberry',name:'Dâu',emoji:'🍓',cost:8,price:20,profit:12},
+ {id:'blueberry',name:'Việt quất',emoji:'🟣',cost:9,price:22,profit:13},
+ {id:'coffee',name:'Cafe',emoji:'☕',cost:6,price:16,profit:10}
+];
+const DECORS=[
+ {id:'cactus',name:'Chậu sương rồng',cost:250,attract:5,file:'assets/decor/cactus.png'},
+ {id:'cake-model',name:'Mô hình bánh kem',cost:150,attract:2,file:'assets/decor/cake.png'},
+ {id:'duck',name:'Mô hình vịt',cost:300,attract:7,file:'assets/decor/duck.png'},
+ {id:'frog',name:'Mô hình ếch',cost:555,attract:5,file:'assets/decor/frog.png'},
+ {id:'bonsai',name:'Chậu bonsai',cost:600,attract:9,file:'assets/decor/bonsai.png'},
+ {id:'bamboo',name:'Chậu tre tài lộc',cost:333,attract:6,file:'assets/decor/bamboo.png'},
+ {id:'lucky-cat',name:'Mèo chiêu tài',cost:1200,attract:12,file:'assets/decor/lucky-cat.png'}
+];
+let fruitBatches=Object.fromEntries(FRUITS.map(f=>[f.id,[]]));
+let fruitStock=Object.fromEntries(FRUITS.map(f=>[f.id,0]));
+let decorEquipped=[null,null,null];
+let selectedCakeIds={};
+let selectedFruitIds={};
+let checkoutProcessing=false;
+function fruitById(id){return FRUITS.find(f=>f.id===id)}
+function decorById(id){return DECORS.find(d=>d.id===id)}
+function syncFruitStock(){for(const f of FRUITS){fruitStock[f.id]=(fruitBatches[f.id]||[]).filter(b=>b.qty>0).reduce((n,b)=>n+b.qty,0)}}
+function fruitValidQty(id){return (fruitBatches[id]||[]).filter(b=>b.bornDay+7>day&&b.qty>0).reduce((n,b)=>n+b.qty,0)}
+function fruitExpiredQty(id){return (fruitBatches[id]||[]).filter(b=>b.bornDay+7<=day&&b.qty>0).reduce((n,b)=>n+b.qty,0)}
+function decorAttraction(){return decorEquipped.reduce((n,id)=>n+(decorById(id)?.attract||0),0)}
+function totalAttraction(){return Math.max(0,currentSkin.attract+decorAttraction()+adAttraction())}
+function toggleMenu(){document.getElementById('mainTabs')?.classList.toggle('menu-open')}
+function closeMenu(){document.getElementById('mainTabs')?.classList.remove('menu-open')}
+function renderDecorSlots(){const el=$('decorSlots');if(!el)return;el.innerHTML=decorEquipped.map((id,i)=>{const d=decorById(id);return `<div class="decor-slot ${d?'':'empty'}">${d?`<img src="${d.file}" alt="${d.name}">`:''}<span class="slot-no">${i+1}</span></div>`}).join('');}
+function renderDecorShop(){const el=$('decorShop');if(!el)return;el.innerHTML=DECORS.map(d=>{const owned=localStorage.getItem('owned_decor_'+d.id)==='1';const equipped=decorEquipped.includes(d.id);return `<div class="decor-item ${equipped?'equipped':''}"><img src="${d.file}" alt="${d.name}"><b>${d.name}</b><small>${d.cost} xu · 🧲 +${d.attract}% thu hút</small><button onclick="${owned?`useDecor('${d.id}')`:`buyDecor('${d.id}')`}">${equipped?'✓ Đang dùng':owned?'Dùng':'Mua '+d.cost+' xu'}</button></div>`}).join('')}
+function buyDecor(id){const d=decorById(id);if(!d)return;if(localStorage.getItem('owned_decor_'+id)==='1'){useDecor(id);return}if(money<d.cost){toast('Chưa đủ xu để mua '+d.name+'.');return}money-=d.cost;localStorage.setItem('owned_decor_'+id,'1');log('🌿 Mua '+d.name+' với '+d.cost+' xu.');useDecor(id);moneyText()}
+function useDecor(id){if(!localStorage.getItem('owned_decor_'+id)){toast('Hãy mua vật trang trí trước.');return}const existing=decorEquipped.indexOf(id);if(existing>=0){decorEquipped[existing]=null;toast('🌿 Đã gỡ '+decorById(id).name+'.');}else{const empty=decorEquipped.indexOf(null);if(empty<0){toast('🔒 Đã đủ 3 vị trí trang trí. Hãy gỡ một món trước.');return}decorEquipped[empty]=id;toast('✨ Đã đặt '+decorById(id).name+' lên quầy.')}renderDecorSlots();renderDecorShop();moneyText()}
+function fruitSelectionSummary(){return Object.entries(selectedFruitIds).filter(([,q])=>q>0).map(([id,q])=>`${q} ${fruitById(id).name}`).join(', ')}
+function cakeSelectionSummary(){return Object.entries(selectedCakeIds).filter(([,q])=>q>0).map(([id,q])=>`${q} ${cakeById(id).name}`).join(', ')}
+function requiredFruit(){return order.fruit||null}
+function resetSelections(){selectedCakeIds={};selectedFruitIds={};renderCakes();renderFruitTray();renderOrder()}
+function renderFruitTray(){const el=$('fruitTray');if(!el)return;syncFruitStock();el.innerHTML=FRUITS.map(f=>{const valid=fruitValidQty(f.id);const selected=selectedFruitIds[f.id]||0;const required=requiredFruit()?.id===f.id;return `<button class="fruit-btn ${selected?'selected':''}" onclick="selectFruit('${f.id}')" ${valid<=0||!shopOpen?'disabled':''}><span class="fruit-emoji">${f.emoji}</span><small>${f.name}</small><span class="fruit-stock">x${valid}</span></button>`}).join('');}
+function renderOrder(){const el=$('order');if(!el)return;const fr=requiredFruit();const allCakesReady=order.every(o=>(selectedCakeIds[o.id]||0)>=o.qty);const fruitReady=!fr||(selectedFruitIds[fr.id]||0)>=fr.qty;const cakeHtml=order.map(o=>{const ready=(selectedCakeIds[o.id]||0)>=o.qty;const name=fr?`${cakeById(o.id).name} vị ${fruitById(fr.id).name}`:cakeById(o.id).name;return `<div class="mini ${ready&&fruitReady?'ok':''}">${ready&&fruitReady?'✓':'○'} ${name} ${(selectedCakeIds[o.id]||0)}/${o.qty}${fr?' · '+(selectedFruitIds[fr.id]||0)+'/'+fr.qty+' Vị':''}</div>`}).join('');el.innerHTML=cakeHtml;const bag=$('checkoutBag');if(bag){const ready=order.length&&allCakesReady&&fruitReady;bag.disabled=!ready;bag.textContent=ready?'🛍️ Túi · Hoàn thành thanh toán':'🛍️ Chọn đủ bánh + Vị rồi bấm túi';}}
+function selectCake(id){if(!shopOpen||!running||!order.length)return;const cake=cakeById(id);if(!cake)return;const req=order.find(o=>o.id===id);const already=selectedCakeIds[id]||0;if(!req){orderSeconds=Math.max(0,orderSeconds-5);updatePatienceUI();toast('❌ Sai bánh! -5 giây kiên nhẫn.');return}if(already>=req.qty){toast('Đã chọn đủ '+cake.name+'.');return}selectedCakeIds[id]=already+1;renderCakes();renderOrder();}
+function discardWrongFlavor(flavorId){
+ if(!shopOpen||!running||!order.length)return;
+ const wrong=fruitById(flavorId);
+ let cakeId=null;
+ for(const o of order){if((selectedCakeIds[o.id]||0)>0){cakeId=o.id;break}}
+ if(!cakeId) cakeId=order.find(o=>(stock[o.id]||0)>0)?.id||null;
+ let discardedCake=false, discardedFlavor=false;
+ if(cakeId){
+   const r=consumeCake(cakeId,1);
+   discardedCake=r.ok;
+ }
+ const fruitIdsToDiscard=new Set();
+ if(wrong && fruitValidQty(flavorId)>0)fruitIdsToDiscard.add(flavorId);
+ for(const [fid,q] of Object.entries(selectedFruitIds)){if(q>0)fruitIdsToDiscard.add(fid)}
+ for(const fid of fruitIdsToDiscard){if(fruitValidQty(fid)>0){const r=consumeFruit(fid,1);discardedFlavor=discardedFlavor||r.ok;}}
+ syncStock();syncFruitStock();
+ selectedCakeIds={};selectedFruitIds={};
+ orderSeconds=Math.max(0,orderSeconds-5);updatePatienceUI();
+ renderCakes();renderFruitTray();renderOrder();moneyText();
+ $('bubble').textContent='❌ Sai rồi, làm lại đi.';
+ toast(discardedCake?(discardedFlavor?'❌ Sai Vị! Đã bỏ bánh và Vị, phải làm lại bánh khác.':'❌ Sai Vị! Đã bỏ bánh, phải làm lại bánh khác.'):'❌ Sai Vị! Hãy làm lại bánh khác.');
+ log('❌ Khách báo: “Sai rồi, làm lại đi.”'+(discardedCake?' Đã bỏ 1 bánh.':'')+(discardedFlavor?' Đã bỏ 1 Vị.':''));
+}
+function selectFruit(id){
+ if(!shopOpen||!running||!order.length)return;
+ const f=fruitById(id);const req=requiredFruit();
+ if(!req||req.id!==id){discardWrongFlavor(id);return}
+ const already=selectedFruitIds[id]||0;
+ if(already>=req.qty){toast('Đã chọn đủ '+f.name+'.');return}
+ if(fruitValidQty(id)<=already){toast('⚠️ Không đủ '+f.name+' còn hạn.');return}
+ selectedFruitIds[id]=already+1;renderFruitTray();renderOrder();
+}
+function consumeCake(id,qty){const lots=(batches[id]||[]).sort((a,b)=>a.bornDay-b.bornDay);let left=qty,expired=false;for(const lot of lots){if(left<=0)break;if(lot.qty<=0)continue;const take=Math.min(lot.qty,left);if(lot.bornDay+3<=day)expired=true;lot.qty-=take;left-=take}batches[id]=lots.filter(b=>b.qty>0);return {ok:left===0,expired}}
+function consumeFruit(id,qty){const lots=(fruitBatches[id]||[]).sort((a,b)=>a.bornDay-b.bornDay);let left=qty,expired=false;for(const lot of lots){if(lot.qty<=0)continue;if(lot.bornDay+7<=day){expired=true;continue}if(left<=0)continue;const take=Math.min(lot.qty,left);lot.qty-=take;left-=take}fruitBatches[id]=lots.filter(b=>b.qty>0 && b.bornDay+7>day);return {ok:left===0,expired}}
+function checkoutOrder(){if(!shopOpen||!running||!order.length||checkoutProcessing)return;const type=window.currentCustomerType||'easy';const name=window.currentCustomerName||'Khách';const fr=requiredFruit();const cakesReady=order.every(o=>(selectedCakeIds[o.id]||0)>=o.qty);const fruitReady=!fr||(selectedFruitIds[fr.id]||0)>=fr.qty;if(!cakesReady||!fruitReady){toast('🛍️ Chưa chọn đủ bánh và Vị.');return}let expired=false;let totalProfit=0;for(const o of order){const c=cakeById(o.id);const valid=(batches[c.id]||[]).filter(b=>b.bornDay+3>day&&b.qty>0).reduce((n,b)=>n+b.qty,0);if(valid<o.qty){toast('⚠️ Không đủ bánh còn hạn để hoàn tất đơn.');return}}if(fr){const validFruit=fruitValidQty(fr.id);if(validFruit<fr.qty){toast('⚠️ Không đủ Vị còn hạn để hoàn tất đơn.');return}}
+// Phát tiếng cha-ching ngay khi bấm túi; hoàn tất giao dịch sau 1 giây.
+checkoutProcessing=true;playChaChing();$('checkoutBag').disabled=true;toast('🛍️ Đang hoàn tất thanh toán...');setTimeout(()=>{if(!shopOpen||!running||!order.length){checkoutProcessing=false;return;}
+for(const o of order){const c=cakeById(o.id);const r=consumeCake(c.id,o.qty);expired=expired||r.expired;const fruitPart=fr?fruitById(fr.id):null;const unitPrice=c.price+(fruitPart?fruitPart.price:0);const unitProfit=c.profit+(fruitPart?fruitPart.profit:0);totalProfit+=unitProfit*o.qty;recordSale({id:fr?`${c.id}__vi-${fr.id}`:c.id,name:fr?`${c.name} vị ${fruitPart.name}`:c.name},o.qty,unitPrice*o.qty)}
+if(fr){const f=fruitById(fr.id);const r=consumeFruit(fr.id,fr.qty);expired=expired||r.expired;}
+sold+=order.reduce((n,o)=>n+o.qty,0);combo++;money+=totalProfit;const customerType=type;let bonus=6+Math.min(combo,10);if(customerType==='vip'){const vipBonus=20+Math.floor(Math.random()*21);bonus+=vipBonus;money+=vipBonus;log('👑 Khách VIP mua nhiều và thưởng thêm '+vipBonus+' xu!')}money+=bonus;served++;dayServed++;if(expired){orderExpired=true;setRating(-.5,'Bán món đã hết hạn');addReview(false,name,'Món đã hết hạn nên mình không hài lòng!');goodSinceReview=0}else if(customerType==='hard'){addReview(true,name,'Đơn hàng đúng món nhưng mình vẫn hơi khó tính nhé.');setRating(.05,'Khách khó tính mua hàng đúng món')}else{goodSinceReview++;addReview(true,name,customerType==='vip'?'Dịch vụ ổn, tôi sẽ quay lại!':undefined);setRating(customerType==='vip'?.1:.02,customerType==='vip'?'Khách VIP hài lòng':'Khách dễ tính hài lòng')}if(served%5===0&&level<MAX_LEVEL){const oldLevel=level;level=Math.min(MAX_LEVEL,level+1);if(level>oldLevel)log('🌟 Lên cấp '+level+'.')}syncStock();syncFruitStock();resetSelections();moneyText();renderAnalytics();if(money<=0){lose('💸 Phá sản!');return}clearCurrentCustomer();if(shopOpen)takeNextCustomer();toast(expired?'Đơn xong nhưng có món hết hạn 😕':'🛍️ Thanh toán thành công!');checkoutProcessing=false;if(!CAKES.some(c=>(stock[c.id]||0)>0)){closeEarlyBecauseSoldOut();return}},1000)}
+function newCustomer(){const available=CAKES.filter(c=>isCakeUnlocked(c)&&(stock[c.id]||0)>0&&shelf[c.id]);const pool=available.length?available:CAKES.filter(isCakeUnlocked);const type=pickCustomerType();const count=type==='vip'?Math.min(pool.length,2+Math.floor(Math.random()*2)):Math.min(pool.length,1);const chosen=[];while(chosen.length<count){const id=pool[Math.floor(Math.random()*pool.length)].id;if(!chosen.includes(id))chosen.push(id)}const person=type==='vip'?VIP_NAMES[Math.floor(Math.random()*VIP_NAMES.length)]:people[Math.floor(Math.random()*people.length)];const avatar=customerAvatarFor(type);const items=chosen.map(id=>({id,qty:type==='vip'?1+Math.floor(Math.random()*2):1,done:0}));let fruit=null;if(fruitBatches&&FRUITS.some(f=>fruitValidQty(f.id)>0)&&Math.random()<.55){const f=FRUITS.filter(x=>fruitValidQty(x.id)>0)[Math.floor(Math.random()*FRUITS.filter(x=>fruitValidQty(x.id)>0).length)];fruit={id:f.id,qty:1,done:0}}return {person,type,avatar,items,fruit,patience:type==='vip'?35:30,maxPatience:type==='vip'?35:30}}
+function takeNextCustomer(){if(!shopOpen||order.length||!queue.length)return;const customer=queue.shift();order=customer.items;order.fruit=customer.fruit;orderExpired=false;selectedCakeIds={};selectedFruitIds={};orderSeconds=customer.patience;maxOrderSeconds=customer.maxPatience;window.currentCustomerType=customer.type;window.currentCustomerAvatar=customer.avatar;window.currentCustomerName=customer.person;$('customer').innerHTML=`<div class="customer-profile"><img id="customerAvatar" src="${customer.avatar}" alt="Khách hàng"><div><div class="customer-name">${customer.person}</div>${customer.type!=='easy'?`<div class="customer-tag ${customer.type}">${CUSTOMER_TYPES[customer.type].icon} ${customer.type==='vip'?'Khách VIP':'Khách khó tính'}</div>`:''}</div><div class="patience-circle" id="patienceCircle" title="Kiên nhẫn"><span>⏳</span></div></div>`;updatePatienceUI();const reqText=customer.items.map(o=>o.qty+' '+cakeById(o.id).name+(customer.fruit?' vị '+fruitById(customer.fruit.id).name:'')).join(' và ');$('bubble').textContent=(customer.type==='vip'?'👑 VIP: Tôi lấy ':'Cho tôi ')+reqText+' nhé!';renderOrder();renderCakes();renderFruitTray();renderQueue()}
+function clearCurrentCustomer(){checkoutProcessing=false;order=[];selectedCakeIds={};selectedFruitIds={};window.currentCustomerType=null;window.currentCustomerAvatar=null;window.currentCustomerName='';apologyPending=false;apologyDeadline=0;$('apologyActions').style.display='none';$('customer').innerHTML='<div class="customer-profile customer-next"><div class="customer-placeholder">👤</div><div class="customer-name">Khách tiếp theo</div></div>';$('bubble').textContent='Phục vụ nhanh và chính xác để giữ danh tiếng nhé!';renderOrder();renderFruitTray();renderCakes();renderQueue()}
+function renderCakes(){syncStock();renderDecorSlots();const stocked=CAKES.filter(c=>isCakeUnlocked(c)&&shelf[c.id]&&(batches[c.id]||[]).some(b=>b.bornDay+3>day&&b.qty>0));$('cakes').innerHTML=stocked.length?stocked.map(c=>{const soon=(batches[c.id]||[]).filter(b=>b.bornDay+3===day+1).reduce((n,b)=>n+b.qty,0);const expired=(batches[c.id]||[]).filter(b=>day>=b.bornDay+3).reduce((n,b)=>n+b.qty,0);const status=expired?`⚠️ Quá hạn: ${expired}`:soon?`⏳ Mai hết hạn: ${soon}`:'🥐 Còn hạn';const selected=selectedCakeIds[c.id]||0;return `<div class="cake ${selected?'cake-selected':''} ${expired?'expired-cake':''}"><span class="stock">x${stock[c.id]}</span><img src="${c.file}" alt="${c.name}"><b>${c.name}</b><span class="price">${c.price} xu · lãi ${c.profit}</span><span class="muted">${status}${selected?' · đã chọn '+selected:''}</span><button class="shop-btn" style="background:${selected?'#83cbb0':'#4b302a'};color:#fff;margin-top:6px;width:100%" onclick="selectCake('${c.id}')" ${!shopOpen?'disabled':''}>${selected?'✓ Chọn thêm':'🍰 Chọn bánh'}</button><button class="remove-shelf ${expired?'expired-remove':''}" title="${expired?'⚡ Gỡ nhanh bánh quá hạn khỏi kệ':'Gỡ bánh khỏi kệ'}" onclick="removeFromShelf('${c.id}')" ${shopOpen&&!expired?'disabled':''}>×</button></div>`}).join(''):`<div class="empty-shelf"><div style="font-size:46px">🧺</div><b>Kệ đang trống</b><p class="muted">Hãy vào tab <b>Nhập hàng</b> để nhập bánh hoặc đưa bánh đã nhập lên kệ.</p></div>`;renderFruitTray();renderShelfManager();renderOrder()}
+function renderRestockChoices(){if(shopOpen)return;syncFruitStock();const cakeRows=CAKES.map(c=>!isCakeUnlocked(c)?`<div class="restock-row locked-row"><span><b>${c.name}</b><br><small>🔒 Mở khóa vào <b>ngày ${c.unlockDay}</b></small></span><label class="locked-input">🔒</label></div>`:`<div class="restock-row"><span><b>${c.name}</b><br><small>Vốn ${c.cost} xu/chiếc · còn ${stock[c.id]} · bán ${c.price} xu</small></span><label>Nhập <input type="number" min="0" max="99" value="0" id="buy-${c.id}"></label></div>`).join('');const fruitRows=FRUITS.map(f=>`<div class="fruit-restock-row"><span><b>${f.emoji} ${f.name}</b><br><small>Vốn ${f.cost} xu · kho ${fruitStock[f.id]} · bán ${f.price} xu · hạn 7 ngày</small></span><label>Nhập <input type="number" min="0" max="99" value="0" id="buy-fruit-${f.id}"></label></div>`).join('');$('restockChoices').innerHTML=`<h3>📦 Nhập hàng</h3><p class="muted">Bánh có hạn 3 ngày. Vị có hạn <b>7 ngày</b>. Cả hai đều dùng cơ chế vốn → bán → thu lãi.</p><div class="restock-section-title"><b>🍰 Bánh</b></div><div class="restock-list">${cakeRows}</div><div class="restock-section-title"><b>🍓 Vị</b></div><div class="restock-list">${fruitRows}</div><button class="secondary" onclick="restockSelected()">📦 Nhập các loại đã chọn</button><div class="box" style="margin-top:12px"><b>🍰 Quản lý bánh trên kệ</b><div id="shelfManager"></div></div>`;[...CAKES.filter(isCakeUnlocked).map(c=>'buy-'+c.id),...FRUITS.map(f=>'buy-fruit-'+f.id)].forEach(id=>$(id)?.addEventListener('input',updateRestockTotal));updateRestockTotal();renderShelfManager()}
+function updateRestockTotal(){let total=0;for(const c of CAKES)if(isCakeUnlocked(c))total+=c.cost*Math.max(0,Math.min(99,Math.floor(Number($('buy-'+c.id)?.value||0))));for(const f of FRUITS)total+=f.cost*Math.max(0,Math.min(99,Math.floor(Number($('buy-fruit-'+f.id)?.value||0))));const el=$('restockTotal');if(el)el.textContent=total+' xu'}
+function restockSelected(){if(shopOpen){toast('🔒 Hãy đóng cửa tiệm trước khi nhập hàng!');return}let total=0,plan={};for(const c of CAKES){const qty=isCakeUnlocked(c)?Math.max(0,Math.min(99,Math.floor(Number($('buy-'+c.id)?.value||0)))):0;plan[c.id]=qty;total+=qty*c.cost}let fplan={};for(const f of FRUITS){const qty=Math.max(0,Math.min(99,Math.floor(Number($('buy-fruit-'+f.id)?.value||0))));fplan[f.id]=qty;total+=qty*f.cost}if(!Object.values(plan).some(q=>q>0)&&!Object.values(fplan).some(q=>q>0)){toast('Hãy chọn bánh hoặc Vị để nhập.');return}if(money<total){toast(`Không đủ vốn! Cần ${total} xu, bạn có ${Math.floor(money)} xu.`);return}money-=total;for(const c of CAKES)if(plan[c.id]>0){batches[c.id].push({qty:plan[c.id],bornDay:day});if(!shelf[c.id]&&shelfSlotsUsed()<shelfSlotsUnlocked())shelf[c.id]=true}for(const f of FRUITS)if(fplan[f.id]>0)fruitBatches[f.id].push({qty:fplan[f.id],bornDay:day});syncStock();syncFruitStock();renderCakes();moneyText();renderRestockChoices();log(`📦 Nhập hàng: bánh ${Object.values(plan).reduce((a,b)=>a+b,0)} chiếc + Vị ${Object.values(fplan).reduce((a,b)=>a+b,0)} phần Vị, vốn ${total} xu.`);toast(`📦 Nhập hàng thành công: -${total} xu`);if(money<=0)lose('💸 Phá sản!')}
+function renderExpiryManagement(){const rows=[];for(const c of CAKES){const expired=(batches[c.id]||[]).filter(b=>b.bornDay+3<=day).reduce((n,b)=>n+b.qty,0);const soon=(batches[c.id]||[]).filter(b=>b.bornDay+3===day+1).reduce((n,b)=>n+b.qty,0);if(expired)rows.push(`<div class="expiry-row"><span><b>🍰 ${c.name}</b><br><small>⚠️ ${expired} chiếc đã hết hạn</small></span><span><button class="secondary" onclick="discardSoon('${c.id}')">🗑️ Bỏ hết hạn</button></span></div>`);else if(soon)rows.push(`<div class="expiry-row"><span><b>🍰 ${c.name}</b><br><small>⏳ ${soon} chiếc hết hạn ngày mai</small></span><span><button class="secondary" onclick="discardSoon('${c.id}')">🗑️ Bỏ bánh</button></span></div>`)}for(const f of FRUITS){const expired=fruitExpiredQty(f.id);const soon=(fruitBatches[f.id]||[]).filter(b=>b.bornDay+7===day+1).reduce((n,b)=>n+b.qty,0);if(expired)rows.push(`<div class="expiry-row expiry-fruit"><span><b>${f.emoji} ${f.name}</b><br><small>⚠️ ${expired} phần đã hết hạn</small></span><span><button class="secondary" onclick="discardFruitExpired('${f.id}')">🗑️ Bỏ hết hạn</button></span></div>`);else if(soon)rows.push(`<div class="expiry-row expiry-fruit"><span><b>${f.emoji} ${f.name}</b><br><small>⏳ ${soon} phần hết hạn ngày mai</small></span><span><button class="secondary" onclick="discardFruitExpired('${f.id}')">🗑️ Bỏ</button></span></div>`)}const html=rows.length?`<div class="expiry-list">${rows.join('')}</div>`:'<p class="muted">✨ Không có bánh hoặc trái cây sắp/hết hạn.</p>';if($('expiryManagementRestock'))$('expiryManagementRestock').innerHTML=html;if($('expiryManagement'))$('expiryManagement').innerHTML=html;renderShelfManager()}
+function discardFruitExpired(id){const f=fruitById(id);let removed=0;fruitBatches[id]=(fruitBatches[id]||[]).filter(b=>{if(b.bornDay+7<=day){removed+=b.qty;return false}return true});syncFruitStock();renderFruitTray();renderExpiryManagement();renderRestockChoices();moneyText();log(`🗑️ Đã bỏ ${removed} ${f.name} hết hạn.`);toast(`🗑️ Đã bỏ ${removed} ${f.name} hết hạn.`)}
+function renderAnalytics(){const box=$('analyticsBox');if(!box)return;const sums=revenueSummary();const render=(label,rows)=>{const total=rows.reduce((n,r)=>n+r.revenue,0);const top=rows[0];return `<div style="margin-top:8px"><b>${label}</b> · ${total} xu</div>`+(top?`<div class="muted">🏆 Best seller: <b>${top.name}</b> · ${top.qty} phần · ${top.revenue} xu</div>`:'<div class="muted">Chưa có dữ liệu bán hàng.</div>')+rows.slice(0,5).map(r=>`<div style="display:flex;justify-content:space-between;font-size:12px"><span>${r.name}</span><span>${r.qty} · ${r.revenue} xu</span></div>`).join('')};const html='<b>📈 Doanh thu & Best Seller</b>'+render('Hôm nay',sums.day)+render('7 ngày gần nhất',sums.week)+render('30 ngày gần nhất',sums.month);box.innerHTML=html;if($('analyticsPage'))$('analyticsPage').innerHTML=html}
+function switchTab(tab){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+tab));if(tab==='restock'){renderRestockChoices();renderExpiryManagement()}if(tab==='cabinet'){renderSkins();renderDecorShop();renderDecorSlots()}if(tab==='ads')renderAds()}
+let fruitSalesHistory=[];
+function saveGame(show=true){
+  try{
+    const data={version:6,shopName,nextReviewerCheckDay,money,level,combo,served,missed,sold,day,rating,batches,stock,shelf,reviewData,expiredHandledDay,goodSinceReview,dayServed,reviewCount,revenueHistory,salesHistory,customerForecastTomorrow,pendingBeggarReward,beggarAccepted,lastBillingDay,currentSkinId:currentSkin.id,theme,ads};
+    localStorage.setItem('dreamBakerySave',JSON.stringify(data));
+    localStorage.setItem('dreamBakeryExtra',JSON.stringify({fruitBatches,decorEquipped,fruitSalesHistory}));
+    if(show)toast('💾 Đã lưu game!');
+  }catch(e){console.warn('Save lỗi',e);if(show)toast('⚠️ Không thể lưu game.')}
+}
+const __oldMoneyText=moneyText;moneyText=function(){__oldMoneyText();if($('attract'))$('attract').textContent=totalAttraction();renderDecorSlots();};
+const __oldClearSave=clearSave;
+clearSave=function(){__oldClearSave();localStorage.removeItem('dreamBakeryExtra');for(const d of DECORS)localStorage.removeItem('owned_decor_'+d.id);toast('🗑️ Đã xóa cả dữ liệu trang trí và trái cây.');}
+function loadGame(){
+  try{
+    const raw=localStorage.getItem('dreamBakerySave');
+    if(!raw)return false;
+    const d=JSON.parse(raw);
+    if(!d||!d.version)return false;
+    shopName=d.shopName||shopName;nextReviewerCheckDay=Number(d.nextReviewerCheckDay||4);money=Number(d.money??300);level=Number(d.level??1);combo=Number(d.combo??0);served=Number(d.served??0);missed=Number(d.missed??0);sold=Number(d.sold??0);day=Number(d.day??1);rating=Number(d.rating??3.5);batches=d.batches||batches;stock=d.stock||stock;shelf=d.shelf||Object.fromEntries(CAKES.map(c=>[c.id,(d.stock?.[c.id]||0)>0]));reviewData=d.reviewData||[];expiredHandledDay=Number(d.expiredHandledDay||0);goodSinceReview=Number(d.goodSinceReview||0);dayServed=Number(d.dayServed||0);reviewCount=Number(d.reviewCount||0);revenueHistory=d.revenueHistory||[];salesHistory=d.salesHistory||[];customerForecastTomorrow=Number(d.customerForecastTomorrow||40);pendingBeggarReward=!!d.pendingBeggarReward;beggarAccepted=!!d.beggarAccepted;lastBillingDay=Number(d.lastBillingDay||0);ads=d.ads||{reviewer:false,reviewerDay:0,livestreamUntil:0,poster:false};theme=d.theme||'brown';const savedSkin=SKINS.find(s=>s.id===d.currentSkinId);if(savedSkin)currentSkin=savedSkin;
+    try{const extra=JSON.parse(localStorage.getItem('dreamBakeryExtra')||'{}');fruitBatches=extra.fruitBatches||fruitBatches;decorEquipped=Array.isArray(extra.decorEquipped)?extra.decorEquipped.slice(0,3):[null,null,null];while(decorEquipped.length<3)decorEquipped.push(null);fruitSalesHistory=extra.fruitSalesHistory||[];}catch(e){console.warn('Extra save lỗi',e)}
+    syncStock();syncFruitStock();applyTheme(theme);$('shopTitle').textContent=shopName;$('cabinet').src=currentSkin.file;$('cabinetName').textContent='Tủ bánh • '+currentSkin.name;moneyText();renderCakes();renderSkins();renderAnalytics();renderReviews();renderRestockChoices();renderAds();renderDecorSlots();renderDecorShop();renderFruitTray();updateNextDayButton();log('💾 Đã khôi phục dữ liệu đã lưu.');return true;
+  }catch(e){console.warn('Load lỗi',e);return false}
+}
+function restartGame(){localStorage.removeItem('dreamBakerySave');localStorage.removeItem('dreamBakeryExtra');for(const d of DECORS)localStorage.removeItem('owned_decor_'+d.id);location.reload();}
+function confirmStarterStock(){
+  const qty=Math.max(1,Math.min(30,Math.floor(Number($('starterQty').value)||0)));
+  const total=qty*8;
+  if(total>300){toast('Số lượng bánh su kem vượt quá 300 xu.');return}
+  money=300-total;batches=Object.fromEntries(CAKES.map(c=>[c.id,[]]));batches['su-kem']=[{qty,bornDay:1}];shelf=Object.fromEntries(CAKES.map(c=>[c.id,c.id==='su-kem']));syncStock();$('setup').style.display='none';moneyText();renderCakes();log('📦 Nhập lô khởi đầu: '+qty+' Bánh su kem, vốn '+total+' xu.');openShop();syncFruitStock();renderFruitTray();renderDecorSlots();renderDecorShop();
+}
+/* Override cake discard so fruit state remains synchronized */
+function discardSoon(id){const arr=batches[id]||[];let removed=0;batches[id]=arr.filter(b=>{if(b.bornDay+3<=day){removed+=b.qty;return false}return true});syncStock();renderCakes();renderExpiryManagement();renderRestockChoices();moneyText();log(`🗑️ Đã bỏ ${removed} ${cakeById(id).name} hết hạn.`);toast(`🗑️ Đã bỏ ${removed} bánh hết hạn.`)}
+/* attraction is now driven by cabinet + 3 decorations + ads */
+const __oldAdAttraction=adAttraction;adAttraction=function(){const live=ads.livestreamUntil>Date.now();return (ads.reviewer?65:0)+(live?10:0)+(ads.poster?5:0)};
+/* Make customer flow react more strongly to attraction: shorter arrival delay + larger queue */
+arrivalDelay=function(){const h=Math.floor(gameMinutes/60);let min=7,max=16;if(h>=7&&h<10){min=4;max=9}else if(h>=11&&h<14){min=3;max=7}else if(h>=16&&h<19){min=3;max=6}else if(h>=19&&h<21){min=5;max=10}const bonus=totalAttraction();return (min+Math.random()*(max-min))/(1+bonus/100)};
+const __oldLoop=loop;
+/* Update existing loop's attraction-dependent queue cap by overriding loop with same logic. */
+loop=function(t,token){if(!running||token!==loopToken)return;const dt=Math.min((t-lastT)/1000,.25);lastT=t;gameMinutes+=dt*(14*60/240);if(gameMinutes>=22*60){gameMinutes=22*60;$('gameClock').textContent=gameClockText();finishDay();return}$('gameClock').textContent=gameClockText();processCabinetEvent(dt);if(apologyPending){apologyDeadline-=dt;if(apologyDeadline<=0){const missedName=apologyCustomerName||'Khách';apologyPending=false;$('apologyActions').style.display='none';setRating(-.05,'Quên xin lỗi khách khi hết món');addReview(false,missedName,'Hết món mà không xin lỗi.');missed++;combo=0;toast('⚠️ Bạn quên xin lỗi khách hàng. -0,05 sao.');clearCurrentCustomer();takeNextCustomer();}}if(cabinetEventBusy)return;arrivalWait-=dt;if(arrivalWait<=0){const attractionBonus=totalAttraction();const queueCap=Math.min(9,5+Math.floor(attractionBonus/10));if(queue.length<queueCap){ensureAudio();doorChime();setTimeout(()=>{if(shopOpen&&!cabinetEventBusy)spawnCustomer(false)},Math.max(400,3000-attractionBonus*20));if(attractionBonus>0&&Math.random()<Math.min(.75,attractionBonus/100)){setTimeout(()=>{if(shopOpen&&!cabinetEventBusy&&queue.length<queueCap)spawnCustomer(false)},Math.max(700,3500-attractionBonus*25))}}arrivalWait=arrivalDelay()}if(order.length){orderSeconds-=dt;updatePatienceUI();if(orderSeconds<=0){const name=window.currentCustomerName||'Khách';missed++;combo=0;goodSinceReview=0;addReview(false,name,CUSTOMER_TYPES[window.currentCustomerType]?.name+' bỏ đi vì hết kiên nhẫn.');setRating(window.currentCustomerType==='hard'?-0.3:-.2,'Khách bỏ đi vì hết kiên nhẫn');toast('Khách bỏ đi vì chờ lâu! 😬');clearCurrentCustomer();takeNextCustomer()}}if(!CAKES.some(c=>(stock[c.id]||0)>0)){closeEarlyBecauseSoldOut();return}queue.forEach(c=>c.patience=Math.max(0,c.patience-dt));const left=queue.filter(c=>c.patience>0);if(left.length<queue.length){const gone=queue.length-left.length;for(let i=0;i<gone;i++){addReview(false,'Khách rời hàng');setRating(-.1,'Khách trong hàng chờ bỏ đi')}queue=left}renderQueue();requestAnimationFrame(tt=>loop(tt,token))};
+/* Initial render after patch */
+syncFruitStock();renderDecorSlots();renderDecorShop();renderFruitTray();renderOrder();renderCakes();
+</script>
+
+<script>
+// V5 safety patch: keep controls usable even if an optional render step fails.
+window.addEventListener('error', function(e){ console.warn('Tiệm Bánh Mộng Mơ:', e.error || e.message); });
+if (typeof window.startGame !== 'function') {
+  window.startGame=function(){
+    const input=document.getElementById('shopInput');
+    const name=input&&input.value.trim();
+    if(name && typeof shopName!=='undefined') shopName=name;
+    const start=document.getElementById('start'), setup=document.getElementById('setup');
+    if(start) start.style.display='none';
+    if(setup) setup.style.display='flex';
+    if(typeof updateStarterCost==='function') updateStarterCost();
+  };
+}
+if (typeof window.confirmStarterStock !== 'function') {
+  window.confirmStarterStock=function(){
+    if(typeof __oldConfirmStarterStock==='function') return __oldConfirmStarterStock();
+    if(typeof toast==='function') toast('Không thể khởi tạo tiệm. Hãy tải lại trang.');
+  };
+}
+</script>
+
+<script>
+// V7 patch: Development, employee, multi-flavor orders, apology flow, compact order labels.
+(function(){
+  // ---------- UI: Development tab ----------
+  const tabs=document.getElementById('mainTabs');
+  if(tabs && !document.querySelector('[data-tab="development"]')){
+    const btn=document.createElement('button');
+    btn.className='tab-btn'; btn.dataset.tab='development'; btn.type='button';
+    btn.textContent='🌱 Phát triển';
+    btn.onclick=function(){switchTab('development');closeMenu();renderDevelopment();};
+    const adsBtn=tabs.querySelector('[data-tab="ads"]');
+    tabs.insertBefore(btn,adsBtn||null);
+  }
+  const adsPanel=document.getElementById('tab-ads');
+  if(adsPanel && !document.getElementById('tab-development')){
+    const panel=document.createElement('div'); panel.id='tab-development'; panel.className='tab-panel';
+    panel.innerHTML=`<div class="box"><h2 style="margin-top:0">🌱 Phát triển</h2><p class="muted">Đầu tư vào nhân sự để tiệm phục vụ nhanh hơn. Nhân viên làm từ <b>08:30 → 20:30</b>; sau 20:30 nhân viên nghỉ.</p><div id="developmentEmployee"></div></div><div class="box" style="margin-top:10px"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>🏗️ Mở rộng mặt bằng</b><span class="locked-input">Coming soon</span></div><p class="muted" style="margin-bottom:0">Mở rộng diện tích tiệm sẽ được cập nhật sau.</p></div>`;
+    adsPanel.parentNode.insertBefore(panel,adsPanel);
+  }
+
+  // ---------- Employee state ----------
+  if(typeof window.employeeHired==='undefined') window.employeeHired=false;
+  if(typeof window.employeeFatiguedUntil==='undefined') window.employeeFatiguedUntil=0;
+  if(typeof window.employeePaidDay==='undefined') window.employeePaidDay=0;
+  if(typeof window.employeeAutoTimer==='undefined') window.employeeAutoTimer=null;
+  if(typeof window.employeePatchReady==='undefined') window.employeePatchReady=true;
+
+  function isEmployeeWorking(){
+    return !!window.employeeHired && shopOpen && running && gameMinutes < (20*60+30) && Date.now()>=window.employeeFatiguedUntil;
+  }
+  function employeeTimeLabel(){
+    if(!window.employeeHired) return 'Chưa thuê';
+    const h=Math.floor(gameMinutes/60),m=Math.floor(gameMinutes%60);
+    if(h>=20 && m>=30) return 'Đã nghỉ hôm nay';
+    if(Date.now()<window.employeeFatiguedUntil) return '😴 Đang hồi phục (10s)';
+    return '🧑‍🍳 Đang làm việc';
+  }
+  window.hireEmployee=function(){
+    if(window.employeeHired){toast('🧑‍🍳 Nhân viên đã được thuê.');return;}
+    if(money<400){toast('💸 Không đủ 400 xu để thuê nhân viên.');return;}
+    money-=400; window.employeeHired=true; window.employeePaidDay=0; window.employeeFatiguedUntil=0;
+    log('🧑‍🍳 Đã thuê nhân viên với giá 400 xu/ngày.'); moneyText(); renderDevelopment(); toast('🧑‍🍳 Đã thuê nhân viên! Lương sẽ trả khi đóng cửa.');
+  };
+  window.fireEmployee=function(){
+    if(!window.employeeHired){toast('Hiện không có nhân viên để sa thải.');return;}
+    window.employeeHired=false; window.employeeFatiguedUntil=0;
+    if(window.employeeAutoTimer){clearTimeout(window.employeeAutoTimer);window.employeeAutoTimer=null;}
+    log('🧑‍🍳 Đã sa thải nhân viên. Không hoàn lại tiền ngày đang thuê.');renderDevelopment();toast('🧹 Đã sa thải nhân viên.');
+  };
+  window.renderDevelopment=function(){
+    const el=document.getElementById('developmentEmployee'); if(!el)return;
+    if(!window.employeeHired){
+      el.innerHTML=`<div class="dev-card"><div class="dev-icon">🧑‍🍳</div><div class="dev-main"><b>Thuê nhân viên</b><small>400 xu / ngày · trả ngay sau khi đóng cửa</small><small>🕣 Làm 08:30–20:30 · 😴 25% có thể mệt giữa giờ và hồi phục 10 giây</small><small>🍰 Tự lấy đúng bánh + đúng Vị. 🛍️ Bấm túi thanh toán vẫn do bạn thực hiện.</small></div><button class="dev-btn" onclick="hireEmployee()">Thuê 400 xu</button></div>`;
+    }else{
+      el.innerHTML=`<div class="dev-card active"><div class="dev-icon">🧑‍🍳</div><div class="dev-main"><b>Nhân viên đang làm việc</b><small>Trạng thái: <b>${employeeTimeLabel()}</b></small><small>💰 Lương hôm nay: <b>400 xu</b> · sẽ trừ sau khi đóng cửa.</small><small>🍰 Nhân viên tự lấy bánh và Vị chính xác; bạn vẫn phải bấm 🛍️ Túi.</small></div><button class="dev-btn danger" onclick="fireEmployee()">Sa thải</button></div>`;
+    }
+  };
+
+  function requiredFlavorCounts(){
+    const counts={};
+    for(const item of (order||[])) if(item.fruit?.id) counts[item.fruit.id]=(counts[item.fruit.id]||0)+item.qty;
+    return counts;
+  }
+  function selectedFlavorCount(id){return Number(selectedFruitIds?.[id]||0)}
+  function allRequiredFlavorsReady(){
+    const req=requiredFlavorCounts();
+    return Object.entries(req).every(([id,q])=>selectedFlavorCount(id)>=q);
+  }
+  function hasAnyFlavorRequirement(){return Object.keys(requiredFlavorCounts()).length>0}
+
+  // ---------- Multi-flavor customer generation ----------
+  window.newCustomer=function(){
+    const available=CAKES.filter(c=>isCakeUnlocked(c)&&(stock[c.id]||0)>0&&shelf[c.id]);
+    const pool=available.length?available:CAKES.filter(isCakeUnlocked);
+    const type=pickCustomerType();
+    if(!pool.length) return {person:'Khách',type,avatar:customerAvatarFor(type),items:[],patience:30,maxPatience:30};
+    const flavorPool=FRUITS.filter(f=>fruitValidQty(f.id)>0);
+    const wantMultiple=flavorPool.length>0 && Math.random() < (type==='vip'?0.65:type==='hard'?0.38:0.22);
+    const variantCount=wantMultiple?2:1;
+    const variants=[];
+    const used=new Set();
+    for(let i=0;i<variantCount;i++){
+      let cake=pool[Math.floor(Math.random()*pool.length)];
+      let flavor=null;
+      if(flavorPool.length && Math.random()<0.82){
+        flavor=flavorPool[Math.floor(Math.random()*flavorPool.length)];
+      }
+      let guard=0;
+      while(guard++<20){
+        const key=cake.id+'__'+(flavor?.id||'none');
+        if(!used.has(key))break;
+        cake=pool[Math.floor(Math.random()*pool.length)];
+        flavor=flavorPool.length&&Math.random()<0.82?flavorPool[Math.floor(Math.random()*flavorPool.length)]:null;
+      }
+      const qty=type==='vip'?(Math.random()<0.45?2:1):(variantCount===2 && i===1 && Math.random()<0.55?2:1);
+      variants.push({id:cake.id,qty,done:0,fruit:flavor?{id:flavor.id}:null});
+      used.add(cake.id+'__'+(flavor?.id||'none'));
+    }
+    // If a customer gets multiple variants, prefer explicit different flavors when possible.
+    if(variants.length>1 && flavorPool.length){
+      const a=variants[0],b=variants[1];
+      if(a.fruit?.id===b.fruit?.id){
+        const other=flavorPool.find(f=>f.id!==a.fruit.id);
+        if(other)b.fruit={id:other.id};
+      }
+    }
+    const person=type==='vip'?VIP_NAMES[Math.floor(Math.random()*VIP_NAMES.length)]:people[Math.floor(Math.random()*people.length)];
+    return {person,type,avatar:customerAvatarFor(type),items:variants,patience:type==='vip'?35:30,maxPatience:type==='vip'?35:30};
+  };
+
+  // ---------- Order rendering / selection ----------
+  window.renderOrder=function(){
+    const el=$('order'); if(!el)return;
+    const req=requiredFlavorCounts();
+    const allCakesReady=(order||[]).every(o=>(selectedCakeIds[o.id]||0)>=o.qty);
+    const allFlavorsReady=Object.entries(req).every(([id,q])=>selectedFlavorCount(id)>=q);
+    const html=(order||[]).map(o=>{
+      const fruitName=o.fruit?.id?fruitById(o.fruit.id)?.name:'';
+      const ready=(selectedCakeIds[o.id]||0)>=o.qty && (!o.fruit?.id || selectedFlavorCount(o.fruit.id)>=req[o.fruit.id]);
+      return `<div class="mini ${ready?'ok':''}">${ready?'✓':'○'} ${cakeById(o.id).name}${fruitName?' vị '+fruitName:''} · ${o.qty} chiếc</div>`;
+    }).join('');
+    el.innerHTML=html;
+    const bag=$('checkoutBag');
+    if(bag){const ready=order.length&&allCakesReady&&allFlavorsReady;bag.disabled=!ready;bag.textContent=ready?'🛍️ Túi · Hoàn thành thanh toán':'🛍️ Chọn đủ bánh + Vị rồi bấm túi';}
+  };
+  window.selectCake=function(id){
+    if(!shopOpen||!running||!order.length)return;
+    const cake=cakeById(id); if(!cake)return;
+    const reqQty=(order||[]).filter(o=>o.id===id).reduce((n,o)=>n+o.qty,0);
+    const already=Number(selectedCakeIds[id]||0);
+    if(!reqQty){orderSeconds=Math.max(0,orderSeconds-5);updatePatienceUI();toast('❌ Sai bánh! -5 giây kiên nhẫn.');return;}
+    if(already>=reqQty){toast('Đã chọn đủ '+cake.name+'.');return;}
+    selectedCakeIds[id]=already+1;renderCakes();renderOrder();
+  };
+  window.selectFruit=function(id){
+    if(!shopOpen||!running||!order.length)return;
+    const f=fruitById(id); if(!f)return;
+    const req=requiredFlavorCounts();
+    if(!req[id]){discardWrongFlavor(id);return;}
+    const already=selectedFlavorCount(id);
+    if(already>=req[id]){toast('Đã chọn đủ '+f.name+'.');return;}
+    if(fruitValidQty(id)<=already){toast('⚠️ Không đủ '+f.name+' còn hạn.');return;}
+    selectedFruitIds[id]=already+1;renderFruitTray();renderOrder();
+  };
+  window.renderFruitTray=function(){
+    const el=$('fruitTray');if(!el)return;syncFruitStock();
+    const req=requiredFlavorCounts();
+    el.innerHTML=FRUITS.map(f=>{const valid=fruitValidQty(f.id);const selected=selectedFlavorCount(f.id);const needed=req[f.id]||0;const wrong=!needed;return `<button class="fruit-btn ${selected?'selected':''}" onclick="selectFruit('${f.id}')" ${valid<=0||!shopOpen?'disabled':''}><span class="fruit-emoji">${f.emoji}</span><small>${f.name}${needed?` · cần ${needed}`:''}</small><span class="fruit-stock">x${valid}</span></button>`}).join('');
+  };
+  window.takeNextCustomer=(function(oldTake){
+    return function(){
+      if(!shopOpen||order.length||!queue.length)return;
+      oldTake();
+      renderOrder();renderFruitTray();
+      if(window.employeeHired && gameMinutes < (20*60+30)) scheduleEmployeeForCurrentOrder();
+    };
+  })(window.takeNextCustomer);
+
+  function scheduleEmployeeForCurrentOrder(){
+    if(window.employeeAutoTimer){clearTimeout(window.employeeAutoTimer);window.employeeAutoTimer=null;}
+    if(!window.employeeHired||!shopOpen||!running||!order.length||gameMinutes >= (20*60+30))return;
+    const start=function(){
+      if(!window.employeeHired||!shopOpen||!running||!order.length||gameMinutes >= (20*60+30))return;
+      if(Date.now()<window.employeeFatiguedUntil){window.employeeAutoTimer=setTimeout(start,500);return;}
+      // 60% chance to become tired in the middle of service; recover for 10 seconds.
+      if(Math.random()<0.25){
+        window.employeeFatiguedUntil=Date.now()+10000;renderDevelopment();toast('😴 Nhân viên mệt, nghỉ 10 giây rồi quay lại.');log('😴 Nhân viên tạm nghỉ 10 giây để hồi phục.');
+        window.employeeAutoTimer=setTimeout(start,10000);return;
+      }
+      // Correctly take all requested cakes and flavors. Payment remains manual.
+      for(const item of order){
+        const need=item.qty-(selectedCakeIds[item.id]||0);
+        for(let i=0;i<need;i++) selectCake(item.id);
+      }
+      const req=requiredFlavorCounts();
+      for(const [fid,qty] of Object.entries(req)){
+        const need=qty-selectedFlavorCount(fid);
+        for(let i=0;i<need;i++) selectFruit(fid);
+      }
+      renderCakes();renderFruitTray();renderOrder();renderDevelopment();
+      toast('🧑‍🍳 Nhân viên đã lấy đúng bánh và Vị. Bạn chỉ cần bấm 🛍️ Túi.');
+    };
+    window.employeeAutoTimer=setTimeout(start,700);
+  }
+
+  // ---------- Checkout: one product per cake+flavor variant ----------
+  window.checkoutOrder=function(){
+    if(!shopOpen||!running||!order.length||checkoutProcessing)return;
+    const type=window.currentCustomerType||'easy', name=window.currentCustomerName||'Khách';
+    const req=requiredFlavorCounts();
+    const cakesReady=order.every(o=>(selectedCakeIds[o.id]||0)>=o.qty);
+    const flavorsReady=Object.entries(req).every(([id,q])=>selectedFlavorCount(id)>=q);
+    if(!cakesReady||!flavorsReady){toast('🛍️ Chưa chọn đủ bánh và Vị.');return;}
+    for(const o of order){const valid=(batches[o.id]||[]).filter(b=>b.bornDay+3>day&&b.qty>0).reduce((n,b)=>n+b.qty,0);if(valid<o.qty){toast('⚠️ Không đủ bánh còn hạn để hoàn tất đơn.');return;}}
+    for(const [fid,q] of Object.entries(req)){if(fruitValidQty(fid)<q){toast('⚠️ Không đủ Vị '+fruitById(fid).name+' còn hạn để hoàn tất đơn.');return;}}
+    checkoutProcessing=true;playChaChing();$('checkoutBag').disabled=true;toast('🛍️ Đang hoàn tất thanh toán...');
+    setTimeout(()=>{
+      if(!shopOpen||!running||!order.length){checkoutProcessing=false;return;}
+      let totalProfit=0,expired=false;
+      for(const item of order){
+        const c=cakeById(item.id); const f=item.fruit?.id?fruitById(item.fruit.id):null;
+        const cr=consumeCake(c.id,item.qty); expired=expired||cr.expired;
+        if(f){const fr=consumeFruit(f.id,item.qty);expired=expired||fr.expired;}
+        const unitPrice=c.price+(f?f.price:0), unitProfit=c.profit+(f?f.profit:0);
+        totalProfit+=unitProfit*item.qty;
+        recordSale({id:f?`${c.id}__vi-${f.id}`:c.id,name:f?`${c.name} vị ${f.name}`:c.name},item.qty,unitPrice*item.qty);
+      }
+      sold+=order.reduce((n,o)=>n+o.qty,0); combo++; money+=totalProfit;
+      let bonus=6+Math.min(combo,10); if(type==='vip'){const vipBonus=20+Math.floor(Math.random()*21);bonus+=vipBonus;money+=vipBonus;log('👑 Khách VIP mua nhiều và thưởng thêm '+vipBonus+' xu!');} money+=bonus;served++;dayServed++;
+      if(expired){orderExpired=true;setRating(-.5,'Bán món đã hết hạn');addReview(false,name,'Món đã hết hạn nên mình không hài lòng!');goodSinceReview=0;}
+      else if(type==='hard'){addReview(true,name,'Đơn hàng đúng món nhưng mình vẫn hơi khó tính nhé.');setRating(.05,'Khách khó tính mua hàng đúng món');}
+      else{goodSinceReview++;addReview(true,name,type==='vip'?'Dịch vụ ổn, tôi sẽ quay lại!':undefined);setRating(type==='vip'?.1:.02,type==='vip'?'Khách VIP hài lòng':'Khách dễ tính hài lòng');}
+      if(served%5===0&&level<MAX_LEVEL){const old=level;level=Math.min(MAX_LEVEL,level+1);if(level>old)log('🌟 Lên cấp '+level+'.');}
+      syncStock();syncFruitStock();selectedCakeIds={};selectedFruitIds={};renderCakes();renderFruitTray();renderOrder();moneyText();renderAnalytics();checkoutProcessing=false;
+      const doneMsg=expired?'Đơn xong nhưng có món hết hạn 😕':'🛍️ Thanh toán thành công!';
+      clearCurrentCustomer(); if(shopOpen)takeNextCustomer(); toast(doneMsg);
+      if(!CAKES.some(c=>(stock[c.id]||0)>0)){closeEarlyBecauseSoldOut();return;}
+    },1000);
+  };
+
+  // ---------- Apology when the requested order cannot be completed ----------
+  // Check the TOTAL quantity requested, including multi-cake/multi-flavor orders.
+  function checkApologyNeed(){
+    if(!shopOpen||!running||!order.length||apologyPending||checkoutProcessing)return;
+    const cakeNeed={};
+    for(const o of order) cakeNeed[o.id]=(cakeNeed[o.id]||0)+Number(o.qty||0);
+    const cakeShort=Object.entries(cakeNeed).some(([id,q])=>Number(stock[id]||0)<q);
+    const flavorNeed=requiredFlavorCounts();
+    const flavorShort=Object.entries(flavorNeed).some(([id,q])=>fruitValidQty(id)<q);
+    if(cakeShort||flavorShort){
+      const type=window.currentCustomerType||'easy';
+      apologyPending=true;apologyDeadline=5;apologyCustomerName=window.currentCustomerName||'Khách';apologyCustomerType=type;
+      const a=$('apologyActions');if(a)a.style.display='block';
+      $('bubble').textContent='🙏 Món khách yêu cầu vừa hết. Bấm “Xin lỗi khách” trong 5 giây để khách bỏ qua và chuyển sang khách tiếp theo.';
+      toast('⚠️ Không đủ món cho đơn này! Hãy xin lỗi khách trong 5 giây.');
+    }
+  }
+  window.apologizeCustomer=function(){
+    if(!apologyPending||!shopOpen||!running)return;
+    const name=apologyCustomerName||window.currentCustomerName||'Khách';
+    apologyPending=false;apologyDeadline=0;
+    const a=$('apologyActions');if(a)a.style.display='none';
+    combo=0;
+    // No reputation penalty: the customer accepts the apology and leaves.
+    $('bubble').textContent='🙏 Anh/chị đã xin lỗi. Khách bỏ qua và chuyển sang phục vụ khách tiếp theo.';
+    toast('🙏 Khách đã bỏ qua. Tiếp tục phục vụ khách tiếp theo.');
+    log('🙏 Đã xin lỗi '+name+' vì không đủ món. Khách bỏ qua, không bị trừ sao.');
+    clearCurrentCustomer();
+    if(shopOpen)takeNextCustomer();
+  };
+  if(!window.__apologyWatcher){window.__apologyWatcher=setInterval(checkApologyNeed,250);}
+
+  // ---------- Wrong flavor / wrong extra flavor handling ----------
+  window.discardWrongFlavor=function(flavorId){
+    if(!shopOpen||!running||!order.length)return;
+    const wrong=fruitById(flavorId);
+    let cakeId=null;
+    for(const o of order){if((selectedCakeIds[o.id]||0)>0){cakeId=o.id;break}}
+    if(!cakeId){const first=order.find(o=>(stock[o.id]||0)>0);cakeId=first?.id||null}
+    let discardedCake=false,discardedFlavor=false;
+    if(cakeId){const r=consumeCake(cakeId,1);discardedCake=r.ok;}
+    if(wrong&&fruitValidQty(flavorId)>0){const r=consumeFruit(flavorId,1);discardedFlavor=r.ok;}
+    syncStock();syncFruitStock();selectedCakeIds={};selectedFruitIds={};orderSeconds=Math.max(0,orderSeconds-5);updatePatienceUI();
+    renderCakes();renderFruitTray();renderOrder();moneyText();
+    $('bubble').textContent='❌ Sai rồi, làm lại đi.';
+    toast('❌ Sai Vị! Đã bỏ bánh và Vị, phải làm lại bánh khác.');
+    log('❌ Khách báo: “Sai rồi, làm lại đi.” Đã bỏ bánh/Vị do chọn sai.');
+  };
+
+  // ---------- Employee salary after closing ----------
+  function payEmployeeAfterClose(){
+    if(!window.employeeHired||window.employeePaidDay===day)return;
+    window.employeePaidDay=day; money-=400; log('💰 Đã trả lương nhân viên 400 xu cho ngày '+day+'.'); moneyText();
+    if(money<=0){toast('💸 Không đủ vốn sau khi trả lương nhân viên.');}
+  }
+  window.closeShop=(function(old){return function(){if(!shopOpen)return;payEmployeeAfterClose();old();renderDevelopment();};})(window.closeShop);
+  window.finishDay=(function(old){return function(){if(!shopOpen)return;payEmployeeAfterClose();old();renderDevelopment();};})(window.finishDay);
+  window.closeEarlyBecauseSoldOut=(function(old){return function(){if(!shopOpen||earlyClosedDay)return;payEmployeeAfterClose();old();renderDevelopment();};})(window.closeEarlyBecauseSoldOut);
+
+  // ---------- Save/load employee state ----------
+  const oldSave=window.saveGame;
+  window.saveGame=function(show=true){
+    oldSave(show);
+    try{localStorage.setItem('dreamBakeryEmployee',JSON.stringify({employeeHired:!!window.employeeHired,employeeFatiguedUntil:Number(window.employeeFatiguedUntil||0),employeePaidDay:Number(window.employeePaidDay||0)}));}catch(e){}
+  };
+  const oldLoad=window.loadGame;
+  window.loadGame=function(){
+    const ok=oldLoad();
+    try{const d=JSON.parse(localStorage.getItem('dreamBakeryEmployee')||'{}');window.employeeHired=!!d.employeeHired;window.employeeFatiguedUntil=0;window.employeePaidDay=Number(d.employeePaidDay||0);}catch(e){window.employeeHired=false;window.employeeFatiguedUntil=0;window.employeePaidDay=0;}
+    renderDevelopment();return ok;
+  };
+  const oldRestart=window.restartGame;
+  window.restartGame=function(){localStorage.removeItem('dreamBakeryEmployee');window.employeeHired=false;window.employeeFatiguedUntil=0;window.employeePaidDay=0;oldRestart();};
+
+  // Ensure the Vị wording is consistent in nhập hàng.
+  const oldRestock=window.renderRestockChoices;
+  window.renderRestockChoices=function(){oldRestock();const el=$('restockChoices');if(el)el.innerHTML=el.innerHTML.replaceAll('🍓 Vị','🍓 Vị').replaceAll('Cả hai đều dùng cơ chế vốn → bán → thu lãi.','Cả hai đều dùng cơ chế vốn → bán → thu lãi.');};
+
+  // Change the existing "-0.1" apology penalty in the live loop to -0.05.
+  // This is applied by the source patch below as a text-level safeguard too.
+  renderDevelopment();
+})();
+
+</script>
+</body>
+</html>
